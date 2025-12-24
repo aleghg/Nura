@@ -1,0 +1,33 @@
+<section class="max-w-7xl mx-auto px-10">
+  <h1 class="text-4xl font-serif tracking-wide mb-16 text-center">
+    Colección
+  </h1>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16">
+
+    <div
+  *ngFor="let p of productos; let i = index"
+  class="group cursor-pointer"
+  [routerLink]="['/producto', i]"
+>
+
+      <div class="overflow-hidden">
+        <img
+          [src]="p.imagen"
+          alt=""
+          class="w-full h-[420px] object-cover group-hover:scale-105 transition duration-500"
+        />
+      </div>
+
+      <div class="mt-6 text-center">
+        <h3 class="font-serif text-lg tracking-wide">
+          {{ p.nombre }}
+        </h3>
+        <p class="text-neutral-500 mt-2">
+          ${{ p.precio }}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>

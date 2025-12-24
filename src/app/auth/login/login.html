@@ -1,0 +1,29 @@
+<section class="h-screen flex items-center justify-center bg-black text-white">
+  <div class="w-full max-w-md">
+    <h1 class="text-4xl font-serif mb-10 text-center">Nüra</h1>
+
+ <!-- EMAIL -->
+    <input
+      type="email"
+      placeholder="Email"
+      [(ngModel)]="email"
+      class="w-full mb-4 p-3 bg-transparent border-b border-white outline-none"
+    />
+
+    <!-- PASSWORD -->
+    <input
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+      class="w-full mb-8 p-3 bg-transparent border-b border-white outline-none"
+    />
+
+    <!-- BOTÓN -->
+    <button
+      (click)="login()"
+      class="w-full border py-3 tracking-widest hover:bg-white hover:text-black transition"
+    >
+      INGRESAR
+    </button>
+  </div>
+</section>

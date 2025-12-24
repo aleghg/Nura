@@ -1,0 +1,25 @@
+<section class="max-w-5xl mx-auto px-10">
+  <h1 class="text-4xl font-serif mb-16 text-center">Tu bolsa</h1>
+
+  <div *ngFor="let item of items$ | async; let i = index"
+       class="flex justify-between items-center border-b py-6">
+    <div>
+      <h3 class="font-serif">{{ item.nombre }}</h3>
+      <p class="text-neutral-500">${{ item.precio }}</p>
+    </div>
+
+    <button
+      (click)="remove(i)"
+      class="text-sm tracking-widest hover:underline"
+    >
+      ELIMINAR
+    </button>
+    <a
+  routerLink="/checkout"
+  class="block text-center mt-10 border py-4 tracking-widest hover:bg-black hover:text-white transition"
+>
+  FINALIZAR COMPRA
+</a>
+
+  </div>
+</section>
