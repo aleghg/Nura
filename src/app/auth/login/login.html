@@ -1,29 +1,38 @@
-<section class="h-screen flex items-center justify-center bg-black text-white">
-  <div class="w-full max-w-md">
-    <h1 class="text-4xl font-serif mb-10 text-center">Nüra</h1>
+<section class="min-h-screen flex items-center justify-center bg-[#F8F5F2]">
+  <div class="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl">
 
- <!-- EMAIL -->
-    <input
-      type="email"
-      placeholder="Email"
-      [(ngModel)]="email"
-      class="w-full mb-4 p-3 bg-transparent border-b border-white outline-none"
-    />
+    <!-- Logo -->
+    <h1 class="text-4xl font-serif text-center text-[#C6A97E] mb-10">
+      Nüra
+    </h1>
+
+    <!-- EMAIL -->
+    <div class="mb-6">
+      <input
+        type="email"
+        placeholder="Correo electrónico"
+        [(ngModel)]="email"
+        class="w-full p-3 bg-transparent border-b border-[#C6A97E]/40 focus:border-[#C6A97E] outline-none"
+      />
+    </div>
 
     <!-- PASSWORD -->
-    <input
-      type="password"
-      placeholder="Password"
-      [(ngModel)]="password"
-      class="w-full mb-8 p-3 bg-transparent border-b border-white outline-none"
-    />
+    <div class="mb-10">
+      <input
+        type="password"
+        placeholder="Contraseña"
+        [(ngModel)]="password"
+        class="w-full p-3 bg-transparent border-b border-[#C6A97E]/40 focus:border-[#C6A97E] outline-none"
+      />
+    </div>
 
     <!-- BOTÓN -->
     <button
       (click)="login()"
-      class="w-full border py-3 tracking-widest hover:bg-white hover:text-black transition"
+      class="w-full bg-[#C6A97E] text-white py-3 tracking-widest rounded-full hover:opacity-90 transition"
     >
       INGRESAR
     </button>
+
   </div>
 </section>
