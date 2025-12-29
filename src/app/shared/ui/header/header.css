@@ -1,0 +1,31 @@
+/* Header base */
+header {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Logo Nüra */
+.logo {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.08em;
+}
+
+/* Navegación */
+nav a {
+  position: relative;
+}
+
+/* Línea sutil al hover (lujo editorial) */
+nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background-color: #C6A97E;
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
