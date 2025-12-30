@@ -1,11 +1,41 @@
-<section class="h-screen flex items-center justify-center bg-neutral-950 text-white">
-  <div class="text-center">
-    <h1 class="text-6xl font-serif tracking-wide mb-6">Nüra</h1>
-    <p class="text-lg text-neutral-300 mb-8">
+<section class="home">
+
+  <div class="editorial-bg"></div>
+
+  <div class="hero">
+    <h1 class="brand">Nüra</h1>
+    <p class="tagline">
       Luz que viste tu esencia
     </p>
-    <button class="border px-10 py-3 tracking-widest hover:bg-white hover:text-black transition">
+
+    <button class="cta"
+      
+      routerLnk="/catalog"
+      >
       VER COLECCIÓN
     </button>
   </div>
+
+</section>
+
+<!-- MANIFIESTO -->
+<section class="section reveal">
+  <h2>Minimalismo con intención</h2>
+  <p>
+    Diseñamos prendas que iluminan lo esencial.
+    Atemporales, suaves, auténticas.
+  </p>
+</section>
+
+<!-- EDITORIAL -->
+<section class="section image-section reveal">
+  <img src="/home/editorial-2.jpg" alt="Nüra Editorial">
+</section>
+
+<!-- CTA FINAL -->
+<section class="section reveal">
+  <h2>Descubre tu luz</h2>
+  <button class="cta dark" routerLink="/catalog">
+    IR A LA COLECCIÓN
+  </button>
 </section>

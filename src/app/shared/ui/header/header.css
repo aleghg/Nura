@@ -1,6 +1,16 @@
 /* Header base */
 header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  background: transparent;
   font-family: 'Poppins', sans-serif;
+}
+
+header a {
+  color: #111;
 }
 
 /* Logo Nüra */

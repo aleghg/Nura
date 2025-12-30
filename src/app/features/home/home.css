@@ -1,0 +1,115 @@
+.home {
+  height: 100vh;
+  background-color: #f3eee7;
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  max-width: 600px;
+  animation: fadeUp 1.2s ease forwards;
+}
+
+/* MARCA */
+.brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 5.5rem;
+  letter-spacing: 0.18em;
+  margin-bottom: 1.8rem;
+}
+
+/* TAGLINE */
+.tagline {
+  font-size: 0.9rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+  margin-bottom: 4.5rem;
+}
+
+/* CTA */
+.cta {
+  background: transparent;
+  border: 1px solid #111;
+  padding: 1rem 3.5rem;
+  letter-spacing: 0.35em;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.cta:hover {
+  background: #111;
+  color: #fff;
+}
+
+/* ANIMACIONES */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.editorial-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/home/editorial.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  filter: grayscale(100%);
+}
+
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.section {
+  padding: 8rem 2rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.section p {
+  color: #666;
+  line-height: 1.8;
+}
+
+.image-section img {
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  display: block;
+  filter: grayscale(100%);
+}
+
+.cta.dark {
+  border-color: #111;
+}
