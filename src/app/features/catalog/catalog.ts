@@ -13,25 +13,30 @@ import { RouterLink } from '@angular/router';
 export class Catalog {
 
   productos = [
-    {
-      nombre: 'Vestido Aurora',
-      precio: 120,
-      imagen: 'https://images.unsplash.com/photo-1520974735194-6c9a5f15c3b4'
-    },
-    {
-      nombre: 'Blusa Lúmina',
-      precio: 80,
-      imagen: 'https://images.unsplash.com/photo-1520975916090-3105956dac38'
-    },
-    {
-      nombre: 'Abrigo Éter',
-      precio: 210,
-      imagen: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b'
-    },
-    {
-      nombre: 'Pantalón Aura',
-      precio: 95,
-      imagen: 'https://images.unsplash.com/photo-1520975434754-9a34f56c2f8c'
-    }
-  ];
+  {
+    nombre: 'Blazer Atelier',
+    precio: 100000,
+    imagen: 'products/blazer-crema-cinturon.png'
+  },
+  {
+    nombre: 'Blusa Clair',
+    precio: 90000,
+    imagen: 'products/blusa-cruzada-lazada.png'
+  },
+  {
+    nombre: 'Top Hombros Solea',
+    precio: 95000,
+    imagen: 'products/top-hombros-punto-fino.png'
+  },
+  {
+    nombre: 'Vestido Dalia',
+    precio: 190000,
+    imagen: 'products/vestido-encaje-delicado.png'
+  },
+  {
+    nombre: 'Vestido Luzéa',
+    precio: 120000,
+    imagen: 'products/vestido-satinado-tirantes.png'
+  }
+];
 }

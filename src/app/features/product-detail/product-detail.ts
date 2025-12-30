@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CartService } from '../../core/services/cart.service';
+import { CartService } from '../../core/services/cart';
 
 @Component({
   selector: 'app-product-detail',

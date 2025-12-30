@@ -11,22 +11,26 @@
   [routerLink]="['/producto', i]"
 >
 
-      <div class="overflow-hidden">
-        <img
-          [src]="p.imagen"
-          alt=""
-          class="w-full h-[420px] object-cover group-hover:scale-105 transition duration-500"
-        />
-      </div>
+<!-- Imagen -->
+      <!-- Imagen -->
+  <div class="relative bg-[#F5F1EC] overflow-hidden aspect-[3/4]">
+    <img
+      [src]="p.imagen"
+      [alt]="p.nombre"
+      class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500"
+    />
+  </div>
 
-      <div class="mt-6 text-center">
-        <h3 class="font-serif text-lg tracking-wide">
-          {{ p.nombre }}
-        </h3>
-        <p class="text-neutral-500 mt-2">
-          ${{ p.precio }}
-        </p>
-      </div>
+  <!-- Info -->
+  <div class="mt-6 text-center">
+    <h3 class="font-serif text-lg tracking-wide text-[#2E2E2E]">
+      {{ p.nombre }}
+    </h3>
+    <p class="text-[#C6A97E] mt-2 font-medium">
+      ${{ p.precio | number:'1.0-0' }}
+    </p>
+  </div>
+
     </div>
 
   </div>
