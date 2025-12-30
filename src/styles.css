@@ -1,6 +1,8 @@
 
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap');
+
 :root {
   --primary: #C6A97E;
   --primary-soft: #E6D9C8;
@@ -19,4 +21,13 @@ body {
   background: var(--background);
   font-family: 'Poppins', sans-serif;
   color: var(--text-dark);
+}
+
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, .brand {
+  font-family: 'Playfair Display', serif;
 }
