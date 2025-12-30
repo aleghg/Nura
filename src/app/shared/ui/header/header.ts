@@ -13,8 +13,8 @@ export class Header {
   isScrolled =false; 
 
   @HostListener('window:scroll')
-  onScroll(){
-    this.isScrolled = window.scrollY >50;
-    
+  onScroll(): void {
+    this.isScrolled = window.scrollY >40;
+
   }
 }

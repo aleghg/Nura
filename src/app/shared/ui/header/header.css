@@ -8,15 +8,20 @@ header {
   transition: all 0.4s ease;
   background: transparent;
   font-family: 'Poppins', sans-serif;
+  transition: background-color 0.4s ease,
+              box-shadow 0.4s ease,
+              padding 0.4s ease;
 }
 
+/* LINKS */
 header a {
   color: #111;
+  position: relative;
 }
 
 header.scrolled {
-  background-color: rgba(245, 242, 238, 0.95);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  background-color: rgba(248, 245, 242, 0.94);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
 }
 
 /* Logo Nüra */
