@@ -10,8 +10,10 @@ import { Checkout } from './features/checkout/checkout';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'catalog', component: Catalog },
-  { path: 'producto/:id', component: ProductDetail },
-  { path: 'cart', component: Cart },
+  { path: 'producto/:id', loadComponent: () =>
+    import('./features/product-detail/product-detail')
+      .then(m => m.ProductDetail)
+},
   { path: 'login', component: Login },
   { path: 'cart', component: Cart, canActivate: [authGuard] },
   { path: 'checkout', component: Checkout, canActivate: [authGuard] },
