@@ -1,4 +1,5 @@
 .home {
+
   height: 100vh;
   background-color: #f3eee7;
   color: #111;
@@ -8,8 +9,29 @@
   overflow: hidden;
 }
 
+.home::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35vh;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(243, 238, 231, 0) 0%,
+    rgba(250, 247, 242, 0.6) 40%,
+    #FAF7F2 100%
+  );
+
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* HERO */
 .hero {
+  position: relative;
+  z-index: 2;
   text-align: center;
   max-width: 600px;
   animation: fadeUp 1.2s ease forwards;
@@ -49,11 +71,13 @@
 }
 
 /* ANIMACIONES */
+
 @keyframes fadeUp {
   from {
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -71,25 +95,147 @@
   filter: grayscale(100%);
 }
 
-
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 1s ease;
+/* CAPA BLANCA */
+.white-overlay {
+  position: relative;
+  background-color: #FAF7F2;
+  margin-top: -15vh;
+  /* hace que se superponga */
+  padding-top: 10vh;
+  z-index: 2;
 }
 
-.reveal.visible {
+.white-overlay.reveal-active {
+  transform: translateY(0);
+}
+
+/*REVEAL*/
+.reveal {
+  opacity: 0;
+  transform: translateY(80px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.reveal.reveal-active {
   opacity: 1;
   transform: translateY(0);
 }
 
+/*EDITORIAL*/
 
+.editorial-card {
+  position: relative;
+  border-radius: 28px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 1.4s ease;
+}
+
+/* POSICIÓN INICIAL (COMPOSICIÓN EDITORIAL) */
+.editorial-card.left {
+  transform: translateY(40px);
+}
+
+.editorial-card.center {
+  transform: translateY(0);
+}
+
+.editorial-card.right {
+  transform: translateY(60px);
+}
+
+.editorial-card.reveal-active {
+  transform: translateY(-12px);
+}
+
+/* IMÁGENES */
+.editorial-card img {
+  transition: transform 1.6s ease, opacity 0.7s ease;
+}
+
+.group img {
+  transition: opacity 0.8s ease, transform 1.2s ease;
+}
+
+.group:hover img {
+  transform: scale(1.04);
+}
+
+
+/* TEXTO SOBRE LA IMAGEN*/
+
+.editorial-caption.overlay {
+  position: absolute;
+  inset: 0; /* ocupa toda la card */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+
+
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(8px);
+
+  opacity: 0;
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+/* APARECE CON EL REVEAL */
+
+.editorial-card:hover .editorial-caption.overlay {
+  opacity: 0;
+}
+
+.editorial-card.reveal-active .editorial-caption.overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* TEXTO INTERNO */
+.editorial-index {
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  color: #b7a27a;
+}
+
+.editorial-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #333;
+}
+
+/* TÍTULO EDITORIAL */
+.editorial-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 4rem;
+}
+
+.editorial-divider {
+  width: 120px;
+  height: 1px;
+  background: #c6a97e;
+  margin: 1.5rem auto 4rem;
+  opacity: 0.6;
+}
+
+
+/*SECCIONES*/
 .section {
-  padding: 8rem 2rem;
+  padding: 4rem 2rem;
   text-align: center;
   max-width: 800px;
   margin: 0 auto;
 }
+
+.section:first-child {
+  padding-top: 2rem;
+}
+
 
 .section h2 {
   font-family: 'Playfair Display', serif;
@@ -97,19 +243,68 @@
   margin-bottom: 2rem;
 }
 
+
 .section p {
   color: #666;
-  line-height: 1.8;
+  line-height: 1.8;}
+
+  .philosophy {
+  max-width: 700px;
 }
 
-.image-section img {
-  width: 100%;
-  max-width: 900px;
-  margin: auto;
+.philosophy p {
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+
+.footer {
+  padding: 6rem 2rem 4rem;
+  background: #FAF7F2;
+  text-align: center;
+}
+
+.footer-brand span {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.4em;
   display: block;
-  filter: grayscale(100%);
+  margin-bottom: 2rem;
 }
 
-.cta.dark {
-  border-color: #111;
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.footer-links a {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #555;
+  text-decoration: none;
+  transition: opacity 0.4s ease;
+}
+
+.footer-links a:hover {
+  opacity: 0.4;
+}
+
+.footer-copy {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: #999;
+}
+
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  opacity: 0.4;
 }
