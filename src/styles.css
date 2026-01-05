@@ -12,10 +12,7 @@
   --text-light: #7A7A7A;
 }
 
-* {
-  box-sizing: border-box;
-}
-
+/* BODY BASE */
 body {
   margin: 0;
   background: var(--background);
@@ -28,9 +25,12 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+/* TIPOGRAFÍAS */
 h1, h2, h3, .brand {
   font-family: 'Playfair Display', serif;
 }
+
+/* ANIMACIÓN */
 
 @keyframes fadeUp {
   from {

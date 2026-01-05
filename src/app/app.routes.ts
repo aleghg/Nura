@@ -1,20 +1,62 @@
 import { Routes } from '@angular/router';
-import { Home } from './features/home/home';
-import {Catalog} from './features/catalog/catalog'
-import { ProductDetail } from './features/product-detail/product-detail';
-import { Cart } from './features/cart/cart';
 import { authGuard } from './auth/auth-guard';
-import { Login } from './auth/login/login';
-import { Checkout } from './features/checkout/checkout';
 
 export const routes: Routes = [
-  { path: '', component: Home },
-  { path: 'catalog', component: Catalog },
-  { path: 'producto/:id', loadComponent: () =>
-    import('./features/product-detail/product-detail')
-      .then(m => m.ProductDetail)
-},
-  { path: 'login', component: Login },
-  { path: 'cart', component: Cart, canActivate: [authGuard] },
-  { path: 'checkout', component: Checkout, canActivate: [authGuard] },
+
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/home/home')
+        .then(m => m.Home)
+  },
+
+  {
+    path: 'catalog',
+    loadComponent: () =>
+      import('./features/catalog/catalog')
+        .then(m => m.Catalog)
+  },
+
+  {
+    path: 'producto/:id',
+    loadComponent: () =>
+      import('./features/product-detail/product-detail')
+        .then(m => m.ProductDetail)
+  },
+
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./auth/login/login')
+        .then(m => m.LoginComponent)
+  },
+
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./auth/register/register')
+        .then(m => m.RegisterComponent)
+  },
+
+  {
+    path: 'cart',
+    loadComponent: () =>
+      import('./features/cart/cart')
+        .then(m => m.CartComponent),
+    canActivate: [authGuard]
+  },
+
+  {
+    path: 'checkout',
+    loadComponent: () =>
+      import('./features/checkout/checkout')
+        .then(m => m.CheckoutComponent),
+    canActivate: [authGuard]
+  },
+
+  {
+    path: '**',
+    redirectTo: ''
+  }
+
 ];

@@ -1,20 +1,30 @@
 import { Component, HostListener } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterModule  } from '@angular/router';
+import { CartComponent  } from "../../../features/cart/cart";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterModule, RouterLink, CartComponent ],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {
+export class HeaderComponent {
 
   isScrolled =false; 
 
+  constructor(private router: Router) {}
+
   @HostListener('window:scroll')
-  onScroll(): void {
-    this.isScrolled = window.scrollY >40;
+  onScroll() {
+    this.isScrolled = window.scrollY > 40;
 
   }
+  openLogin() {
+    this.router.navigate(['/login']);
+  }
+
 }
+
+
+

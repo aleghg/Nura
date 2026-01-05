@@ -9,7 +9,7 @@ import { Observable, take, map } from 'rxjs';
   imports: [CommonModule],
   templateUrl: './checkout.html'
 })
-export class Checkout {
+export class CheckoutComponent {
 
   items$!: Observable<any[]>;
   total$!: Observable<number>;

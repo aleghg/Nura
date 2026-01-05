@@ -6,10 +6,12 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
+  selector: 'app-login',
   imports: [CommonModule, FormsModule],
-  templateUrl: './login.html'
+  templateUrl: './login.html',
+  styleUrl: './login.css'
 })
-export class Login {
+export class LoginComponent {
 
   email = '';
   password = '';
@@ -17,10 +19,22 @@ export class Login {
   constructor(
     private auth: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   login() {
-    this.auth.login({ email: this.email, password: this.password })
-      .subscribe(() => this.router.navigate(['/']));
+    this.auth.login({
+      email: this.email,
+      password: this.password
+    }).subscribe({
+      next: () => this.router.navigate(['/']),
+      error: () => alert('Credenciales incorrectas')
+    });
+
+  }
+
+  // 👉 IR A REGISTRO
+  goToRegister(): void {
+    this.router.navigate(['/register']);
   }
 }
+

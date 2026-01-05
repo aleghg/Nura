@@ -1,12 +1,10 @@
-
 .login-wrapper {
-  position: fixed;       /* 🔥 CLAVE */
-  inset: 0;  
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f8f5f2; 
+  background: #f8f5f2;
+  overflow: hidden;
 }
 
 /* CONTENEDOR */

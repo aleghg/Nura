@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
-export class Cart {
+export class CartComponent {
 
   items$!: Observable<any[]>;
 

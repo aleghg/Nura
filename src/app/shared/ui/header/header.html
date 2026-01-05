@@ -1,33 +1,54 @@
-<header class="fixed top-0 left-0 w-full z-50 bg-[#F8F5F2]/90 backdrop-blur" 
-   [class.scrolled]="isScrolled"
+<header
+  class="fixed top-0 left-0 w-full z-50 bg-[#F8F5F2]/90 backdrop-blur transition-all duration-300"
+  [class.scrolled]="isScrolled"
 >
-  
   <div class="max-w-7xl mx-auto flex items-center justify-between px-12 py-6">
 
     <!-- Logo -->
-    <div class="logo text-3xl text-[#C6A97E]">
-     Nüra
+    <div
+      class="logo text-3xl text-[#C6A97E] cursor-pointer"
+      routerLink="/"
+    >
+      Nüra
     </div>
-
 
     <!-- Navigation -->
     <nav class="hidden md:flex gap-12 text-xs tracking-widest uppercase text-[#3A3A3A]">
-      <a routerLink="/" class="hover:text-[#C6A97E] transition">
+      <a
+        routerLink="/"
+        class="hover:text-[#C6A97E] transition"
+        routerLinkActive="text-[#C6A97E]"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
         Inicio
       </a>
-      <a routerLink="/catalog" class="hover:text-[#C6A97E] transition">
+
+      <a
+        routerLink="/catalog"
+        class="hover:text-[#C6A97E] transition"
+        routerLinkActive="text-[#C6A97E]"
+      >
         Colección
       </a>
-      <a routerLink="/about" class="hover:text-[#C6A97E] transition">
+
+      <a
+        routerLink="/about"
+        class="hover:text-[#C6A97E] transition"
+        routerLinkActive="text-[#C6A97E]"
+      >
         Nosotras
       </a>
-      <a routerLink="/cart" class="hover:text-[#C6A97E] transition">
-        Carrito
+
+      <!-- LOGIN -->
+      <a
+        (click)="openLogin()"
+        class="cursor-pointer hover:text-[#C6A97E] transition"
+      >
+        Ingresar
       </a>
+
+      
     </nav>
-
-
-
 
   </div>
 </header>
