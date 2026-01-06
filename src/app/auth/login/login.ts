@@ -26,7 +26,7 @@ export class LoginComponent {
       email: this.email,
       password: this.password
     }).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => this.router.navigate(['/shop']),
       error: () => alert('Credenciales incorrectas')
     });
 

@@ -23,6 +23,7 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/"
+                
               }
             ],
             "styles": [
@@ -68,6 +69,7 @@
         "test": {
           "builder": "@angular/build:unit-test"
         }
+        
       }
     }
   }

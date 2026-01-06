@@ -1,0 +1,9 @@
+.shop-wrapper {
+  padding: 48px;
+  background: #f8f5f2;
+  min-height: 100vh;
+}
+
+section {
+  margin-bottom: 64px;
+}

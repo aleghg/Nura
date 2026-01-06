@@ -3,6 +3,7 @@ import { authGuard } from './auth/auth-guard';
 
 export const routes: Routes = [
 
+  // 🌿 HOME PÚBLICO (marca, info general)
   {
     path: '',
     loadComponent: () =>
@@ -10,6 +11,8 @@ export const routes: Routes = [
         .then(m => m.Home)
   },
 
+
+  // 🛍️ CATÁLOGO (puede ser público o mixto)
   {
     path: 'catalog',
     loadComponent: () =>
@@ -24,6 +27,8 @@ export const routes: Routes = [
         .then(m => m.ProductDetail)
   },
 
+
+  // 🔐 AUTH
   {
     path: 'login',
     loadComponent: () =>
@@ -38,6 +43,16 @@ export const routes: Routes = [
         .then(m => m.RegisterComponent)
   },
 
+   // 🟢 NUEVA APP POST-LOGIN (PUNTO CLAVE)
+  {
+    path: 'shop',
+    loadComponent: () =>
+      import('./features/shop/shop')
+        .then(m => m.Shop),
+    canActivate: [authGuard]
+  },
+
+  // 🛒 PRIVADO
   {
     path: 'cart',
     loadComponent: () =>
@@ -54,9 +69,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
+  // ❌ FALLBACK
   {
     path: '**',
     redirectTo: ''
   }
+
 
 ];
