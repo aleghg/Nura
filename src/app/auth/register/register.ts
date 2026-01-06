@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-register',
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
@@ -16,7 +17,9 @@ export class RegisterComponent {
   password = '';
   confirmPassword = '';
 
-  constructor(private router: Router) {}
+  acceptTerms = false;
+
+  constructor(private router: Router) { }
 
   register() {
     if (this.password !== this.confirmPassword) {
@@ -24,8 +27,8 @@ export class RegisterComponent {
       return;
     }
 
-    // aquí luego conectas backend
-    console.log('Register:', this.name, this.email);
+    // aquí llamas a tu AuthService.register(...)
+    console.log('Registro válido');
 
     this.router.navigate(['/login']);
   }
