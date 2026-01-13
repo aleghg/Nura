@@ -10,9 +10,56 @@ export const routes: Routes = [
       import('./features/home/home')
         .then(m => m.Home)
   },
+  // 🔐 AUTH (PÚBLICO)
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./auth/login/login')
+        .then(m => m.LoginComponent)
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./auth/register/register')
+        .then(m => m.RegisterComponent)
+  },
 
+  // 🧪 RUTA DE PRUEBA POST-LOGIN (FASE 1 y 2)
+  {
+    path: 'protected',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./protected/protected')
+        .then(m => m.Protected)
+  },
+  // 🟢 SHOP (FASE 3)
+  {
+    path: 'shop',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/shop/shop')
+        .then(m => m.Shop)
+  },
 
-  // 🛍️ CATÁLOGO (puede ser público o mixto)
+  // 🛒 CART (PRIVADO)
+  {
+    path: 'cart',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/cart/cart')
+        .then(m => m.CartComponent)
+  },
+
+  // 💳 CHECKOUT (PRIVADO)
+  {
+    path: 'checkout',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/checkout/checkout')
+        .then(m => m.CheckoutComponent)
+  },
+
+  // 🛍️ CATÁLOGO PÚBLICO (OPCIONAL)
   {
     path: 'catalog',
     loadComponent: () =>
@@ -27,53 +74,10 @@ export const routes: Routes = [
         .then(m => m.ProductDetail)
   },
 
-
-  // 🔐 AUTH
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./auth/login/login')
-        .then(m => m.LoginComponent)
-  },
-
-  {
-    path: 'register',
-    loadComponent: () =>
-      import('./auth/register/register')
-        .then(m => m.RegisterComponent)
-  },
-
-   // 🟢 NUEVA APP POST-LOGIN (PUNTO CLAVE)
-  {
-    path: 'shop',
-    loadComponent: () =>
-      import('./features/shop/shop')
-        .then(m => m.Shop),
-    canActivate: [authGuard]
-  },
-
-  // 🛒 PRIVADO
-  {
-    path: 'cart',
-    loadComponent: () =>
-      import('./features/cart/cart')
-        .then(m => m.CartComponent),
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'checkout',
-    loadComponent: () =>
-      import('./features/checkout/checkout')
-        .then(m => m.CheckoutComponent),
-    canActivate: [authGuard]
-  },
-
   // ❌ FALLBACK
   {
     path: '**',
     redirectTo: ''
-  }
-
+  },
 
 ];

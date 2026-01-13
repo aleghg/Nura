@@ -1,0 +1,34 @@
+<header class="shop-header">
+  <!-- LOGO -->
+  <div class="logo">
+    NÜRA
+  </div>
+
+  <!-- BUSCADOR -->
+  <div class="shop-search">
+    <input
+      type="text"
+      placeholder="Buscar productos..."
+      (input)="buscar($event)"
+    />
+  </div>
+
+  <!-- ACCIONES -->
+  <div class="shop-actions">
+    <!-- CARRITO -->
+    <button class="cart-btn">
+      🛒
+      <span class="cart-count">{{ totalItems }}</span>
+    </button>
+
+    <!-- USUARIO -->
+    <span class="user-name">
+      {{ userName }}
+    </span>
+
+    <!-- LOGOUT (FAKE) -->
+    <button class="logout-btn">
+      Cerrar sesión
+    </button>
+  </div>
+</header>

@@ -1,39 +1,135 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FormGroup, ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angular/forms';
+import { AuthService } from '../auth-service';
+import Swal from 'sweetalert2';
 
 @Component({
   standalone: true,
   selector: 'app-register',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register.html',
-  styleUrl: './register.css'
+  styleUrls: ['./register.css']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
-  name = '';
-  email = '';
-  password = '';
-  confirmPassword = '';
+  form!: FormGroup;
 
-  acceptTerms = false;
+  // 👁️ VISIBILIDAD CONTRASEÑAS
+  showPassword = false;
+  showConfirmPassword = false;
 
-  constructor(private router: Router) { }
+  // 🔴 ERRORES BACKEND
+  errores: { [key: string]: string } = {};
+  mensajeGeneral: string = '';
 
-  register() {
-    if (this.password !== this.confirmPassword) {
-      alert('Las contraseñas no coinciden');
+  constructor(
+    private fb: NonNullableFormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    this.form = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [
+    Validators.required,
+    Validators.email,
+    Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
+  ]],
+  password: ['', [
+    Validators.required,
+    Validators.minLength(8),
+    Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/)
+  ]],
+
+  confirmPassword: ['', [Validators.required]],
+  acceptTerms: [false, [Validators.requiredTrue]]
+  });
+
+    // 🧹 Limpiar errores al escribir
+      this.form.valueChanges.subscribe(() => {
+      this.errores = {};
+      this.mensajeGeneral = '';
+    });
+}
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  register(): void {
+     console.log('CLICK EN CREAR CUENTA'); // <- verifica que el submit se dispara
+
+    this.errores = {};
+    this.mensajeGeneral = '';
+
+
+    // 1️⃣ Validación básica frontend (UX)
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    // aquí llamas a tu AuthService.register(...)
-    console.log('Registro válido');
+    const password = this.form.get('password')!.value.trim();
+    const confirmPassword = this.form.get('confirmPassword')!.value.trim();
 
+    // 2️⃣ Validación local de contraseñas
+    if (password !== confirmPassword) {
+      this.errores['confirmPassword'] = 'Las contraseñas no coinciden';
+      return;
+    }
+
+    // 3️⃣ Objeto para backend
+    const data = {
+      nombre: this.form.get('nombre')!.value.trim(),
+      email: this.form.get('email')!.value.trim().toLowerCase(),
+      password: password,
+      rol: 'CLIENTE'
+    };
+
+    // 4️⃣ Llamada backend
+    this.auth.register(data).subscribe({
+
+      next: (res) => {
+        Swal.fire({
+          title: 'Cuenta creada 🎉',
+          text: res.mensaje,
+          icon: 'success',
+          confirmButtonColor: '#C6A97E'
+        });
+
+        this.router.navigate(['/login']);
+      },
+
+      error: (err: any) => {
+    console.log('ERROR REAL:', err);
+  
+      
+        // 🔴 VALIDACIONES BACKEND → ERRORES POR CAMPO
+        if (err.error?.codigo === 'VALIDACION') {
+          this.errores = err.error.errores;
+          return;
+        }
+
+        // 🔴 ERROR GENERAL (SOLO TEXTO)
+        const mensaje =
+          typeof err.error?.mensaje === 'string'
+            ? err.error.mensaje
+            : 'Error al registrar';
+
+        this.mensajeGeneral = mensaje;
+      }
+    });
+  }
+
+  goToLogin(): void {
     this.router.navigate(['/login']);
   }
 
-  goToLogin() {
-    this.router.navigate(['/login']);
-  }
 }

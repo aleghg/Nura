@@ -1,11 +1,11 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductService } from '../../services/product.service';
-
+import { ProductoService} from '../../services/producto.service';
+import { HeaderComponent } from '../../shared/ui/header/header'; 
 @Component({
   standalone: true,
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -15,16 +15,16 @@ export class Home implements OnInit, AfterViewInit {
   products: any[] = [];
   loading = true;
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductoService) {}
 
   // 🔥 PASO 7.1 — CARGAR DATOS
   ngOnInit(): void {
     this.productService.getFeaturedProducts().subscribe({
-      next: (data) => {
+      next: (data: any[]) => {
         this.products = data;
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error cargando productos', err);
         this.loading = false;
       }

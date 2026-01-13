@@ -124,3 +124,24 @@
 .register-footer a:hover {
   text-decoration: underline;
 }
+
+.password-field {
+  position: relative;
+}
+
+.toggle-password-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.toggle-password-icon:hover {
+  opacity: 1;
+}
+

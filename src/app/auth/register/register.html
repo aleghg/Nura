@@ -5,65 +5,110 @@
       Crea una cuenta
     </div>
 
-    <form class="register-form" (ngSubmit)="register()">
+    <!-- 🔴 MENSAJE GENERAL BACKEND -->
+    <div class="error" *ngIf="mensajeGeneral">
+      {{ mensajeGeneral }}
+    </div>
 
-      <input
-        class="register-input"
+    <form [formGroup]="form" (ngSubmit)="register()">
+
+      <!-- NOMBRE -->
+       <input
+       class="register-input"
         type="text"
-        name="username"
-        [(ngModel)]="name"
-        placeholder="JohnDoe"
-        required
+        formControlName="nombre"
+        placeholder="Nombre completo"
+        [class.invalid]="
+          errores['nombre'] ||
+          (form.get('nombre')?.touched && form.get('nombre')?.invalid)
+        "
       />
 
+      <div class="error" *ngIf="errores['nombre']">
+        {{ errores['nombre'] }}
+      </div>
+
+      <!-- EMAIL -->
       <input
         class="register-input"
         type="email"
-        name="email"
-        [(ngModel)]="email"
+        formControlName="email"
         placeholder="correo@email.com"
-        required
+        [class.invalid]="
+          errores['email'] ||
+          (form.get('email')?.touched && form.get('email')?.invalid)
+        "
       />
 
-      <input
-        class="register-input"
-        type="password"
-        name="password"
-        [(ngModel)]="password"
-        placeholder="••••••••"
-        required
-      />
+      <div class="error" *ngIf="errores['email']">
+        {{ errores['email'] }}
+      </div>
 
-      <input
-        class="register-input"
-        type="password"
-        name="confirmPassword"
-        [(ngModel)]="confirmPassword"
-        placeholder="••••••••"
-        required
-      />
+
+      <!-- CONTRASEÑA -->
+      <div class="password-field">
+        <input
+          class="register-input"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Contraseña"
+          [class.invalid]="errores['password']"
+        />
+
+        <img
+          class="toggle-password-icon"
+          src="/icons/ojo.png"
+          alt="Ver contraseña"
+          (click)="togglePassword()"
+        />
+
+        <div class="error" *ngIf="errores['password']">
+          {{ errores['password'] }}
+        </div>
+      </div>
+
+
+      <!-- CONFIRMAR CONTRASEÑA -->
+      <div class="password-field">
+        <input
+          class="register-input"
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          placeholder="Confirmar contraseña"
+          [class.invalid]="errores['confirmPassword']"
+        />
+
+        <img
+          class="toggle-password-icon"
+          src="/icons/ojo.png"
+          alt="Ver contraseña"
+          (click)="toggleConfirmPassword()"
+        />
+
+        <div class="error" *ngIf="errores['confirmPassword']">
+          {{ errores['confirmPassword'] }}
+        </div>
+      </div>
 
       <!-- TÉRMINOS -->
       <label class="register-terms">
-        <input
-          type="checkbox"
-          [(ngModel)]="acceptTerms"
-          name="terms"
-          required/>
-
+        <input type="checkbox" formControlName="acceptTerms" />
         <span>
           Acepto los
           <a href="#">Términos y condiciones</a>
         </span>
       </label>
-      <button
-        class="register-button"
-        type="submit">
-      
 
+      <div class="error" *ngIf="form.get('acceptTerms')?.touched && form.get('acceptTerms')?.invalid">
+        Debes aceptar los términos
+      </div>
+
+      <!-- BOTÓN -->
+      <button class="register-button" type="submit">
         Crear cuenta
       </button>
 
+      <!-- FOOTER -->
       <p class="register-footer">
         ¿Ya tienes cuenta?
         <a (click)="goToLogin()">Inicia sesión</a>
