@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormGroup, ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angular/forms';
-import { AuthService } from '../auth-service';
+import {FormGroup,ReactiveFormsModule,Validators,NonNullableFormBuilder} from '@angular/forms';
+import { AuthService } from '../auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -28,32 +28,37 @@ export class RegisterComponent implements OnInit {
     private fb: NonNullableFormBuilder,
     private auth: AuthService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-    nombre: ['', [Validators.required, Validators.minLength(3)]],
-    email: ['', [
-    Validators.required,
-    Validators.email,
-    Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
-  ]],
-  password: ['', [
-    Validators.required,
-    Validators.minLength(8),
-    Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/)
-  ]],
-
-  confirmPassword: ['', [Validators.required]],
-  acceptTerms: [false, [Validators.requiredTrue]]
-  });
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)
+        ]
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/)
+        ]
+      ],
+      confirmPassword: ['', [Validators.required]],
+      acceptTerms: [false, [Validators.requiredTrue]]
+    });
 
     // 🧹 Limpiar errores al escribir
-      this.form.valueChanges.subscribe(() => {
+    this.form.valueChanges.subscribe(() => {
       this.errores = {};
       this.mensajeGeneral = '';
     });
-}
+  }
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -64,13 +69,11 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
-     console.log('CLICK EN CREAR CUENTA'); // <- verifica que el submit se dispara
 
     this.errores = {};
     this.mensajeGeneral = '';
 
-
-    // 1️⃣ Validación básica frontend (UX)
+    // 1️⃣ Validación frontend
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -89,13 +92,12 @@ export class RegisterComponent implements OnInit {
     const data = {
       nombre: this.form.get('nombre')!.value.trim(),
       email: this.form.get('email')!.value.trim().toLowerCase(),
-      password: password,
+      password,
       rol: 'CLIENTE'
     };
 
     // 4️⃣ Llamada backend
     this.auth.register(data).subscribe({
-
       next: (res) => {
         Swal.fire({
           title: 'Cuenta creada 🎉',
@@ -108,22 +110,19 @@ export class RegisterComponent implements OnInit {
       },
 
       error: (err: any) => {
-    console.log('ERROR REAL:', err);
-  
-      
-        // 🔴 VALIDACIONES BACKEND → ERRORES POR CAMPO
+        console.error('ERROR REAL:', err);
+
+        // 🔴 Validaciones backend por campo
         if (err.error?.codigo === 'VALIDACION') {
           this.errores = err.error.errores;
           return;
         }
 
-        // 🔴 ERROR GENERAL (SOLO TEXTO)
-        const mensaje =
+        // 🔴 Error general
+        this.mensajeGeneral =
           typeof err.error?.mensaje === 'string'
             ? err.error.mensaje
             : 'Error al registrar';
-
-        this.mensajeGeneral = mensaje;
       }
     });
   }
@@ -131,5 +130,4 @@ export class RegisterComponent implements OnInit {
   goToLogin(): void {
     this.router.navigate(['/login']);
   }
-
 }

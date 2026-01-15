@@ -1,21 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
-  standalone: true,
   selector: 'app-shop-header',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './shop-header.html',
   styleUrls: ['./shop-header.css']
 })
-export class ShopHeaderComponent {
+export class ShopHeaderComponent implements OnInit {
 
-  // 🎭 DATA FALSA (SOLO DISEÑO)
-  totalItems = 3;
-  userName = 'Cliente';
+  carritoCantidad = 0;
 
-  buscar(event: Event): void {
-    // SOLO VISUAL
-    const value = (event.target as HTMLInputElement).value;
-    console.log('Buscando:', value);
+  // 🔍 emitir texto de búsqueda al shop
+  @Output() buscar = new EventEmitter<string>();
+
+  constructor(
+    private router: Router,
+    private cartService: CartService
+  ) {}
+
+  ngOnInit(): void {
+    this.carritoCantidad = this.cartService.totalCantidad();
+
+    this.cartService.cart$.subscribe(() => {
+      this.carritoCantidad = this.cartService.totalCantidad();
+    });
   }
 
+  // 🔎 se ejecuta desde el input del header
+  buscarProducto(event: Event): void {
+    const texto = (event.target as HTMLInputElement).value;
+    this.buscar.emit(texto);
+  }
+
+  // 🔐 auth
+  get isAuthenticated(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  openLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  logout(): void {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 }

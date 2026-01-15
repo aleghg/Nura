@@ -1,54 +1,67 @@
+<!-- HEADER FIXED SUPERIOR -->
 <header
-  class="fixed top-0 left-0 w-full z-50 bg-[#F8F5F2]/90 backdrop-blur transition-all duration-300"
+  class="fixed top-0 left-0 w-full z-50 bg-[#F8F5F2]/90 backdrop-blur transition-all duration-300 shadow-md"
   [class.scrolled]="isScrolled"
 >
   <div class="max-w-7xl mx-auto flex items-center justify-between px-12 py-6">
 
-    <!-- Logo -->
+    <!-- LOGO -->
     <div
-      class="logo text-3xl text-[#C6A97E] cursor-pointer"
+      class="logo text-3xl text-[#C6A97E] cursor-pointer font-bold"
       routerLink="/"
     >
       Nüra
     </div>
 
-    <!-- Navigation -->
-    <nav class="hidden md:flex gap-12 text-xs tracking-widest uppercase text-[#3A3A3A]">
+    <!-- NAVEGACIÓN -->
+    <nav class="flex gap-8 items-center text-xs tracking-widest uppercase text-[#3A3A3A]">
+
       <a
         routerLink="/"
-        class="hover:text-[#C6A97E] transition"
         routerLinkActive="text-[#C6A97E]"
         [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-[#C6A97E] transition"
       >
         Inicio
       </a>
 
       <a
         routerLink="/catalog"
-        class="hover:text-[#C6A97E] transition"
         routerLinkActive="text-[#C6A97E]"
+        class="hover:text-[#C6A97E] transition"
       >
         Colección
       </a>
 
       <a
         routerLink="/about"
-        class="hover:text-[#C6A97E] transition"
         routerLinkActive="text-[#C6A97E]"
+        class="hover:text-[#C6A97E] transition"
       >
         Nosotras
       </a>
 
-      <!-- LOGIN -->
-      <a
+      <!-- BOTÓN LOGIN -->
+      <button
+        *ngIf="!isAuthenticated"
         (click)="openLogin()"
-        class="cursor-pointer hover:text-[#C6A97E] transition"
+        class="uppercase hover:text-[#C6A97E] transition"
       >
         Ingresar
-      </a>
+      </button>
 
-      
+      <!-- BOTÓN CERRAR SESIÓN -->
+      <button
+        *ngIf="isAuthenticated"
+        (click)="logout()"
+        class="uppercase hover:text-[#C6A97E] transition"
+      >
+        Cerrar sesión
+      </button>
+
+      <!-- CARRITO -->
+      <app-cart *ngIf="isAuthenticated"></app-cart>
+
     </nav>
-
   </div>
 </header>

@@ -1,112 +1,84 @@
-/* =========================
-   SHOP HEADER
-   ========================= */
+/* ===============================
+   SHOP HEADER (FIXED & LIMPIO)
+================================ */
 
 .shop-header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  left: 0; 
+  left: 0;
   width: 100%;
   z-index: 50;
 
+  background: rgba(255, 253, 250, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+
+  margin: 0;
+}
+
+/* ===============================
+   CONTENIDO INTERNO
+================================ */
+
+.shop-header .inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-
-  padding: 0.8rem 2.5rem;
-
-  background-color: #F8F5F2;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-
-  font-family: 'Poppins', sans-serif;
+  padding: 26px 6vw;
 }
 
-/* LOGO */
+/* ===============================
+   LOGO
+================================ */
+
 .shop-header .logo {
   font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
   letter-spacing: 0.12em;
-  font-size: 1.3rem;
+  color: #c7a97b;
   cursor: pointer;
-  color: #111;
 }
 
-/* =========================
+/* ===============================
    BUSCADOR
-   ========================= */
-
-.shop-search {
-  flex: 1;
-  max-width: 480px;
-}
+================================ */
 
 .shop-search input {
-  width: 100%;
-  padding: 0.65rem 1rem;
-
-  border-radius: 999px;
-  border: 1px solid #E0DAD2;
-
-  font-size: 0.95rem;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  padding: 8px 14px;
+  color: #1c1c1c;
   outline: none;
-
-  transition: border-color 0.2s ease,
-              box-shadow 0.2s ease;
 }
 
-.shop-search input:focus {
-  border-color: #C6A97E;
-  box-shadow: 0 0 0 2px rgba(198, 169, 126, 0.25);
+.shop-search input::placeholder {
+  color: #888;
 }
 
-/* =========================
-   ACCIONES DERECHA
-   ========================= */
+/* ===============================
+   ACCIONES (LOGOUT / CARRITO)
+================================ */
 
 .shop-actions {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 20px;
 }
 
-/* CARRITO */
-.cart-btn {
-  position: relative;
-  font-size: 1.1rem;
-  cursor: pointer;
+.shop-actions button {
   background: none;
   border: none;
-}
-
-.cart-count {
-  position: absolute;
-  top: -6px;
-  right: -8px;
-
-  background-color: #C6A97E;
-  color: white;
-
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 999px;
-}
-
-/* USUARIO */
-.user-name {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-/* LOGOUT */
-.logout-btn {
-  background: none;
-  border: none;
-  font-size: 0.85rem;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #1c1c1c;
   cursor: pointer;
-  color: #888;
-  transition: color 0.2s ease;
 }
 
-.logout-btn:hover {
-  color: #111;
+.shop-actions button:hover {
+  text-decoration: underline;
 }

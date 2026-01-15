@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductoService} from '../../services/producto.service';
 import { HeaderComponent } from '../../shared/ui/header/header'; 
+
 @Component({
   standalone: true,
   selector: 'app-home',

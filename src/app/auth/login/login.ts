@@ -1,43 +1,45 @@
-import { Component,OnInit } from '@angular/core';
-import { AuthService } from '../auth-service';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NonNullableFormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  NonNullableFormBuilder,
+  Validators,
+  FormGroup,
+  ReactiveFormsModule
+} from '@angular/forms';
 import Swal from 'sweetalert2';
-
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-
 export class LoginComponent implements OnInit {
 
-  
-form!: FormGroup;
-showPassword = false;
+  form!: FormGroup;
+  showPassword = false;
 
-constructor(
+  constructor(
     private fb: NonNullableFormBuilder,
     private auth: AuthService,
     private router: Router
   ) {}
 
-ngOnInit(): void {
-  this.form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-}
+  }
 
-togglePassword(): void {
+  togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
- // 🔐 LOGIN
+  // 🔐 LOGIN
   login(): void {
 
     if (this.form.invalid) {
@@ -56,7 +58,6 @@ togglePassword(): void {
     };
 
     this.auth.login(data).subscribe({
-
       next: (res) => {
         // ✅ Guardar sesión
         localStorage.setItem('token', res.token);
@@ -72,7 +73,7 @@ togglePassword(): void {
         });
 
         // ✅ Redirigir
-        this.router.navigate(['/shop']);
+        this.router.navigateByUrl('/shop');
       },
 
       error: (err: any) => {
@@ -90,8 +91,4 @@ togglePassword(): void {
       }
     });
   }
-
-
-
-  }
-
+}

@@ -1,3 +1,4 @@
+
 <section class="shop">
 
   <!-- HEADER DEL SHOP -->
@@ -18,4 +19,54 @@
 
   <div class="scroll-indicator">Scroll</div>
 
+<!-- Header exclusivo para Shop -->
+<app-shop-header></app-shop-header>
+
+<section class="shop">
+
+  <!-- Fondo editorial -->
+  <div class="shop-editorial-bg"></div>
+
+  <div class="shop-content">
+
+    <!-- HERO -->
+    <div class="shop-hero reveal">
+      <h1>Catálogo</h1>
+      <p>Explora nuestra colección de productos exclusivos</p>
+    </div>
+
+    <!-- Categorías -->
+    <div class="shop-categories reveal">
+      <button *ngFor="let categoria of categorias"
+              (click)="filtrarPorCategoria(categoria)">
+        {{ categoria }}
+      </button>
+    </div>
+
+    <!-- Grid productos -->
+    <div class="shop-grid">
+      <div
+        class="product-card reveal"
+        *ngFor="let producto of productosFiltrados; let i = index"
+        [style.transitionDelay]="(i * 120) + 'ms'"
+      >
+        <img
+          [src]="'data:image/jpeg;base64,' + producto.imagen"
+          [alt]="producto.nombre"
+        >
+>>>>>>> 626aed8 (Corrige estructura del repositorio frontend y elimina repo anidado)
+
+        <div class="product-info">
+          <h3>{{ producto.nombre }}</h3>
+          <span class="price">${{ producto.precio | number }}</span>
+          <p>{{ producto.descripcion }}</p>
+
+          <button>
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>

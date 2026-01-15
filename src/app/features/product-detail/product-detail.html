@@ -1,7 +1,11 @@
 <section class="product" *ngIf="producto">
 
   <div class="image">
-    <img [src]="producto.imagen" [alt]="producto.nombre">
+    <img
+      [src]="getImagen()"
+      [alt]="producto.nombre"
+      class="producto-imagen"
+    />
   </div>
 
   <div class="info">

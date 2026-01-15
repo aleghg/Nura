@@ -1,34 +1,37 @@
 <header class="shop-header">
-  <!-- LOGO -->
-  <div class="logo">
-    NÜRA
-  </div>
+  <div class="inner">
 
-  <!-- BUSCADOR -->
-  <div class="shop-search">
-    <input
-      type="text"
-      placeholder="Buscar productos..."
-      (input)="buscar($event)"
-    />
-  </div>
+    <!-- Logo -->
+    <div class="logo" routerLink="/shop">
+      NÜRA
+    </div>
 
-  <!-- ACCIONES -->
-  <div class="shop-actions">
-    <!-- CARRITO -->
-    <button class="cart-btn">
-      🛒
-      <span class="cart-count">{{ totalItems }}</span>
-    </button>
+    <!-- Buscador -->
+    <div class="shop-search">
+      <input
+        type="text"
+        placeholder="Buscar productos..."
+        (input)="buscarProducto($event)"
+      />
+    </div>
 
-    <!-- USUARIO -->
-    <span class="user-name">
-      {{ userName }}
-    </span>
+    <!-- Acciones usuario / carrito -->
+    <div class="shop-actions">
 
-    <!-- LOGOUT (FAKE) -->
-    <button class="logout-btn">
-      Cerrar sesión
-    </button>
+      <button *ngIf="!isAuthenticated" (click)="openLogin()">
+        Ingresar
+      </button>
+
+      <button *ngIf="isAuthenticated" (click)="logout()">
+        Cerrar sesión
+      </button>
+
+      <button class="cart-btn">
+        🛒
+        <span class="cart-count">{{ carritoCantidad }}</span>
+      </button>
+
+    </div>
+
   </div>
 </header>
