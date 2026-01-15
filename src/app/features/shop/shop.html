@@ -1,16 +1,11 @@
-
-
-<!-- Header exclusivo para Shop -->
 <app-shop-header></app-shop-header>
 
 <section class="shop">
 
-  <!-- Fondo editorial -->
   <div class="shop-editorial-bg"></div>
 
   <div class="shop-content">
 
-    <!-- HERO -->
     <div class="shop-hero reveal">
       <h1>Catálogo</h1>
       <p>Explora nuestra colección de productos exclusivos</p>
@@ -18,32 +13,36 @@
 
     <!-- Categorías -->
     <div class="shop-categories reveal">
+      <button (click)="filtrarPorCategoria(null)">Todos</button>
       <button *ngFor="let categoria of categorias"
               (click)="filtrarPorCategoria(categoria)">
-        {{ categoria }}
+        {{ categoria.nombre }}
       </button>
     </div>
 
-    <!-- Grid productos -->
+    <!-- Buscador -->
+    <div class="shop-search reveal">
+      <input type="text"
+             placeholder="Buscar productos..."
+             [(ngModel)]="busqueda"
+             (keyup)="buscarProducto()">
+    </div>
+
+    <!-- Grid de productos -->
     <div class="shop-grid">
-      <div
-        class="product-card reveal"
-        *ngFor="let producto of productosFiltrados; let i = index"
-        [style.transitionDelay]="(i * 120) + 'ms'"
-      >
-        <img
-          [src]="'data:image/jpeg;base64,' + producto.imagen"
-          [alt]="producto.nombre"
-        >
+      <div class="product-card reveal"
+           *ngFor="let producto of productosFiltrados; let i = index"
+           [style.transitionDelay]="(i * 120) + 'ms'">
+
+        <img [src]="getImagen(producto)" [alt]="producto.nombre">
 
         <div class="product-info">
           <h3>{{ producto.nombre }}</h3>
           <span class="price">${{ producto.precio | number }}</span>
           <p>{{ producto.descripcion }}</p>
-
-          <button>
-            Agregar al carrito
-          </button>
+          <p><strong>Categoría:</strong> {{ producto.categoria?.nombre }}</p>
+          <p><strong>Stock:</strong> {{ producto.stock }}</p>
+          <button (click)="agregarAlCarrito(producto)">Agregar al carrito</button>
         </div>
       </div>
     </div>

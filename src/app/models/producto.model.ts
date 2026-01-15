@@ -1,10 +1,12 @@
+import { Categoria } from "./categoria.model";
+
 export interface Producto {
   idProducto: number;
   nombre: string;
-  descripcion: string;
+  descripcion?: string;
   precio: number;
-  categoriaId: number;
   stock: number;
-  imagen: string; // 👈 BASE64
-  idCategoria: number;
+  imagen: string;       // BASE64
+  activo: boolean;
+  categoria: Categoria;  
 }

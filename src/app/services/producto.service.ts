@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Producto } from '../models/producto.model';
 
 @Injectable({
@@ -8,22 +10,41 @@ import { Producto } from '../models/producto.model';
 })
 export class ProductoService {
 
-  private API = 'http://localhost:8080/productos';
+  private API = `${environment.apiUrl}/productos`; // Ajusta la URL según tu backend
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Listar todos los productos
+  // 🔹 Todos los productos
   getAll(): Observable<Producto[]> {
-    return this.http.get<Producto[]>(this.API);
+    return this.http.get<Producto[]>(this.API)
+      .pipe(
+        catchError(err => {
+          console.error('Error al obtener productos', err);
+          return throwError(() => err);
+        })
+      );
   }
 
-  // 🔹 Obtener producto por ID (detalle)
+  // 🔹 Producto por ID
   getById(id: number): Observable<Producto> {
-    return this.http.get<Producto>(`${this.API}/${id}`);
+    return this.http.get<Producto>(`${this.API}/${id}`)
+      .pipe(
+        catchError(err => {
+          console.error(`Error al obtener producto con ID ${id}`, err);
+          return throwError(() => err);
+        })
+      );
   }
 
-  // 🔹 Productos destacados
+  // 🔹 Productos destacados (si tu backend lo soporta)
   getFeaturedProducts(): Observable<Producto[]> {
-    return this.http.get<Producto[]>(`${this.API}/featured`);
+    return this.http.get<Producto[]>(`${this.API}/destacados`)
+      .pipe(
+        catchError(err => {
+          console.error('Error al obtener productos destacados', err);
+          return throwError(() => err);
+        })
+      );
   }
+
 }

@@ -1,27 +1,43 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductoService} from '../../services/producto.service';
-import { HeaderComponent } from '../../shared/ui/header/header'; 
+
+// Services
+import { ProductoService } from '../../services/producto.service';
+
+// Componentes
+import { HeaderComponent } from '../../shared/ui/header/header';
+
+// Models (opcional, si quieres tipar tus productos)
+import { Producto } from '../../models/producto.model';
 
 @Component({
   standalone: true,
   selector: 'app-home',
   imports: [CommonModule, HeaderComponent],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrls: ['./home.css']  // 🔹 corregido de styleUrl → styleUrls
 })
 export class Home implements OnInit, AfterViewInit {
 
   // 🔹 DATOS DEL BACKEND
-  products: any[] = [];
-  loading = true;
+  products: Producto[] = [];  // 🔹 mejor tipado
+  loading: boolean = true;
 
-  constructor(private productService: ProductoService) {}
+  constructor(private productoService: ProductoService) {}
 
-  // 🔥 PASO 7.1 — CARGAR DATOS
+  // =========================
+  // INIT
+  // =========================
   ngOnInit(): void {
-    this.productService.getFeaturedProducts().subscribe({
-      next: (data: any[]) => {
+    this.cargarProductosDestacados();
+  }
+
+  // =========================
+  // CARGAR PRODUCTOS DESTACADOS
+  // =========================
+  cargarProductosDestacados(): void {
+    this.productoService.getFeaturedProducts().subscribe({
+      next: (data: Producto[]) => {
         this.products = data;
         this.loading = false;
       },
@@ -32,7 +48,9 @@ export class Home implements OnInit, AfterViewInit {
     });
   }
 
-  // 🔥 PASO 7.2 — ANIMACIONES (NO SE TOCA)
+  // =========================
+  // ANIMACIONES REVEAL
+  // =========================
   ngAfterViewInit(): void {
     const elements = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver(
@@ -40,6 +58,7 @@ export class Home implements OnInit, AfterViewInit {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible', 'reveal-active');
+            observer.unobserve(entry.target); // opcional: se observa solo una vez
           }
         });
       },
@@ -48,4 +67,5 @@ export class Home implements OnInit, AfterViewInit {
 
     elements.forEach(el => observer.observe(el));
   }
+
 }
