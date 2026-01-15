@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import {FormGroup,ReactiveFormsModule,Validators,NonNullableFormBuilder} from '@angular/forms';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../auth-service';
 import Swal from 'sweetalert2';
 
 @Component({

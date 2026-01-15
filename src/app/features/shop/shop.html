@@ -1,23 +1,4 @@
 
-<section class="shop">
-
-  <!-- HEADER DEL SHOP -->
-  <app-shop-header></app-shop-header>
-
-  <div class="editorial-bg"></div>
-
-  <div class="hero">
-    <h1 class="brand">Compra</h1>
-    <p class="tagline">
-      Ven y disfruta
-    </p>
-
-    <button class="cta" routerLink="/catalog">
-      COMPRAR
-    </button>
-  </div>
-
-  <div class="scroll-indicator">Scroll</div>
 
 <!-- Header exclusivo para Shop -->
 <app-shop-header></app-shop-header>
@@ -54,7 +35,6 @@
           [src]="'data:image/jpeg;base64,' + producto.imagen"
           [alt]="producto.nombre"
         >
->>>>>>> 626aed8 (Corrige estructura del repositorio frontend y elimina repo anidado)
 
         <div class="product-info">
           <h3>{{ producto.nombre }}</h3>

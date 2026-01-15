@@ -20,7 +20,7 @@ export class ShopHeaderComponent implements OnInit {
   constructor(
     private router: Router,
     private cartService: CartService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carritoCantidad = this.cartService.totalCantidad();
