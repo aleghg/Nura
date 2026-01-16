@@ -11,6 +11,11 @@
       <p>Explora nuestra colección de productos exclusivos</p>
     </div>
 
+    <!-- 🔴 Mensaje de error categorías -->
+    <div *ngIf="errorCategorias" class="alert alert-danger">
+      {{ errorCategorias }}
+    </div>
+
     <!-- Categorías -->
     <div class="shop-categories reveal">
       <button (click)="filtrarPorCategoria(null)">Todos</button>
@@ -26,6 +31,11 @@
              placeholder="Buscar productos..."
              [(ngModel)]="busqueda"
              (keyup)="buscarProducto()">
+    </div>
+
+    <!-- 🔴 Mensaje de error productos -->
+    <div *ngIf="errorProductos" class="alert alert-danger">
+      {{ errorProductos }}
     </div>
 
     <!-- Grid de productos -->

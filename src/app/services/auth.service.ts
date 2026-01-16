@@ -12,9 +12,9 @@ export class AuthService {
 
   private API = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-    // 🔐 LOGIN
+  // 🔐 LOGIN
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${this.API}/login`, data)
@@ -34,21 +34,31 @@ export class AuthService {
 
   // 🔎 AUTENTICACIÓN
   isAuthenticated(): boolean {
-  const token = localStorage.getItem('token');
-  return token !== null && token !== '';
-}
+    const token = localStorage.getItem('token');
+    return token !== null && token !== '';
+  }
+
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  getRol(): string | null {
+    return localStorage.getItem('rol');
+  }
+
 
 
   // 📝 REGISTRO
   register(data: {
-  nombre: string;
-  email: string;
-  password: string;
-  rol?: string;
-}): Observable<{ mensaje: string }> {
-  return this.http.post<{ mensaje: string }>(
-    `${this.API}/register`,
-    data
-  );
-}
+    nombre: string;
+    email: string;
+    password: string;
+    rol?: string;
+  }): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(
+      `${this.API}/register`,
+      data
+    );
+  }
 }

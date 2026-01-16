@@ -13,8 +13,8 @@
     <form [formGroup]="form" (ngSubmit)="register()">
 
       <!-- NOMBRE -->
-       <input
-       class="register-input"
+      <input
+        class="register-input"
         type="text"
         formControlName="nombre"
         placeholder="Nombre completo"
@@ -23,9 +23,12 @@
           (form.get('nombre')?.touched && form.get('nombre')?.invalid)
         "
       />
-
+      <!-- 🔴 ERROR NOMBRE: backend o frontend -->
       <div class="error" *ngIf="errores['nombre']">
         {{ errores['nombre'] }}
+      </div>
+      <div class="error" *ngIf="!errores['nombre'] && form.get('nombre')?.touched && form.get('nombre')?.invalid">
+        Nombre obligatorio y mínimo 3 caracteres
       </div>
 
       <!-- EMAIL -->
@@ -39,11 +42,13 @@
           (form.get('email')?.touched && form.get('email')?.invalid)
         "
       />
-
+      <!-- 🔴 ERROR EMAIL: backend o frontend -->
       <div class="error" *ngIf="errores['email']">
         {{ errores['email'] }}
       </div>
-
+      <div class="error" *ngIf="!errores['email'] && form.get('email')?.touched && form.get('email')?.invalid">
+        Email inválido
+      </div>
 
       <!-- CONTRASEÑA -->
       <div class="password-field">
@@ -52,21 +57,21 @@
           [type]="showPassword ? 'text' : 'password'"
           formControlName="password"
           placeholder="Contraseña"
-          [class.invalid]="errores['password']"
+          [class.invalid]="errores['password'] || (form.get('password')?.touched && form.get('password')?.invalid)"
         />
-
         <img
           class="toggle-password-icon"
           src="/icons/ojo.png"
           alt="Ver contraseña"
           (click)="togglePassword()"
         />
-
         <div class="error" *ngIf="errores['password']">
           {{ errores['password'] }}
         </div>
+        <div class="error" *ngIf="!errores['password'] && form.get('password')?.touched && form.get('password')?.invalid">
+          Contraseña debe tener mínimo 8 caracteres, mayúsculas, minúsculas, números y símbolos
+        </div>
       </div>
-
 
       <!-- CONFIRMAR CONTRASEÑA -->
       <div class="password-field">
@@ -75,18 +80,19 @@
           [type]="showConfirmPassword ? 'text' : 'password'"
           formControlName="confirmPassword"
           placeholder="Confirmar contraseña"
-          [class.invalid]="errores['confirmPassword']"
+          [class.invalid]="errores['confirmPassword'] || (form.get('confirmPassword')?.touched && form.get('confirmPassword')?.invalid)"
         />
-
         <img
           class="toggle-password-icon"
           src="/icons/ojo.png"
           alt="Ver contraseña"
           (click)="toggleConfirmPassword()"
         />
-
         <div class="error" *ngIf="errores['confirmPassword']">
           {{ errores['confirmPassword'] }}
+        </div>
+        <div class="error" *ngIf="!errores['confirmPassword'] && form.get('confirmPassword')?.touched && form.get('confirmPassword')?.invalid">
+          Debes confirmar la contraseña
         </div>
       </div>
 
@@ -98,7 +104,6 @@
           <a href="#">Términos y condiciones</a>
         </span>
       </label>
-
       <div class="error" *ngIf="form.get('acceptTerms')?.touched && form.get('acceptTerms')?.invalid">
         Debes aceptar los términos
       </div>

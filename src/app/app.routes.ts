@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './auth/auth-guard';
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
 
   /* =============================
-   🌿 LAYOUT PRINCIPAL
+     🌿 LAYOUT PRINCIPAL
   ============================== */
   {
     path: '',
@@ -21,18 +22,34 @@ export const routes: Routes = [
             .then(m => m.Home)
       },
 
-      // 🔐 AUTH (PÚBLICO)
+      // 🔐 LOGIN / REGISTER (PÚBLICO)
       {
         path: 'login',
         loadComponent: () =>
-          import('./auth/login/login')
+          import('./components/login/login')
             .then(m => m.LoginComponent)
       },
       {
         path: 'register',
         loadComponent: () =>
-          import('./auth/register/register')
+          import('./components/register/register')
             .then(m => m.RegisterComponent)
+      },
+
+      // 🛍️ CATÁLOGO PÚBLICO
+      {
+        path: 'catalog',
+        loadComponent: () =>
+          import('./features/catalog/catalog')
+            .then(m => m.Catalog)
+      },
+
+      // 📦 DETALLE DE PRODUCTO
+      {
+        path: 'producto/:id',
+        loadComponent: () =>
+          import('./features/product-detail/product-detail')
+            .then(m => m.ProductDetail)
       },
 
       // 🧪 RUTA PROTEGIDA DE PRUEBA
@@ -62,26 +79,19 @@ export const routes: Routes = [
             .then(m => m.CheckoutComponent)
       },
 
-      // 🛍️ CATÁLOGO PÚBLICO
+      // 👤 USUARIOS (SOLO ADMIN)
       {
-        path: 'catalog',
+        path: 'usuarios',
+        canActivate: [adminGuard],
         loadComponent: () =>
-          import('./features/catalog/catalog')
-            .then(m => m.Catalog)
-      },
-
-      // 📦 DETALLE DE PRODUCTO
-      {
-        path: 'producto/:id',
-        loadComponent: () =>
-          import('./features/product-detail/product-detail')
-            .then(m => m.ProductDetail)
+          import('./components/usuarios/usuarios')
+            .then(m => m.UsuariosComponent)
       }
     ]
   },
 
   /* =============================
-   🟢 LAYOUT SHOP (HEADER SHOP)
+     🟢 LAYOUT SHOP (PROTEGIDO)
   ============================== */
   {
     path: 'shop',
@@ -93,14 +103,14 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./features/shop/shop')
+          import('./components/shop/shop')
             .then(m => m.ShopComponent)
       }
     ]
   },
 
   /* =============================
-   ❌ FALLBACK
+     ❌ FALLBACK
   ============================== */
   {
     path: '**',

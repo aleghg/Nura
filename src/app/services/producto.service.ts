@@ -10,22 +10,20 @@ import { Producto } from '../models/producto.model';
 })
 export class ProductoService {
 
-  private API = `${environment.apiUrl}/productos`; // Ajusta la URL según tu backend
+  private API = `${environment.apiUrl}/productos`;
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Todos los productos
   getAll(): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.API)
       .pipe(
         catchError(err => {
           console.error('Error al obtener productos', err);
-          return throwError(() => err);
+          return throwError(() => err); // para que ErrorInterceptor lo capture también
         })
       );
   }
 
-  // 🔹 Producto por ID
   getById(id: number): Observable<Producto> {
     return this.http.get<Producto>(`${this.API}/${id}`)
       .pipe(
@@ -36,9 +34,8 @@ export class ProductoService {
       );
   }
 
-  // 🔹 Productos destacados (si tu backend lo soporta)
   getFeaturedProducts(): Observable<Producto[]> {
-    return this.http.get<Producto[]>(`${this.API}/destacados`)
+    return this.http.get<Producto[]>(`${this.API}/featured`)
       .pipe(
         catchError(err => {
           console.error('Error al obtener productos destacados', err);
@@ -46,5 +43,4 @@ export class ProductoService {
         })
       );
   }
-
 }

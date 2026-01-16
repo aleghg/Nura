@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import {FormGroup,ReactiveFormsModule,Validators,NonNullableFormBuilder} from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
 
@@ -88,12 +88,11 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    // 3️⃣ Objeto para backend
+    // 3️⃣ Objeto para backend (sin rol, backend asigna CLIENTE por defecto)
     const data = {
       nombre: this.form.get('nombre')!.value.trim(),
       email: this.form.get('email')!.value.trim().toLowerCase(),
-      password,
-      rol: 'CLIENTE'
+      password
     };
 
     // 4️⃣ Llamada backend

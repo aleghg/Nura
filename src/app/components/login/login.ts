@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; 
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -15,12 +15,16 @@ import Swal from 'sweetalert2';
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrls: ['./login.css']
 })
 export class LoginComponent implements OnInit {
 
   form!: FormGroup;
   showPassword = false;
+
+  // 🔴 ERRORES BACKEND
+  errores: { [key: string]: string } = {};
+  mensajeGeneral: string = '';
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -29,9 +33,22 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 🔎 Redirigir si ya hay sesión
+    if (this.auth.isAuthenticated()) {
+      this.router.navigate(['/shop']);
+      return;
+    }
+
+    // Inicializar formulario
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
+    });
+
+    // 🧹 Limpiar errores al escribir
+    this.form.valueChanges.subscribe(() => {
+      this.errores = {};
+      this.mensajeGeneral = '';
     });
   }
 
@@ -41,14 +58,11 @@ export class LoginComponent implements OnInit {
 
   // 🔐 LOGIN
   login(): void {
+    this.errores = {};
+    this.mensajeGeneral = '';
 
     if (this.form.invalid) {
-      Swal.fire({
-        title: 'Formulario incompleto',
-        text: 'Ingresa tu email y contraseña',
-        icon: 'warning',
-        confirmButtonColor: '#C6A97E'
-      });
+      this.form.markAllAsTouched();
       return;
     }
 
@@ -58,33 +72,39 @@ export class LoginComponent implements OnInit {
     };
 
     this.auth.login(data).subscribe({
-      next: (res) => {
-        // ✅ Guardar sesión
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('email', res.email);
-        localStorage.setItem('rol', res.rol);
+      next: () => {
+        // ✅ AuthService ya guarda token
 
         Swal.fire({
-          title: 'Bienvenidos ✨',
+          title: 'Bienvenid@ ✨',
           text: 'Inicio de sesión exitoso',
           icon: 'success',
           timer: 1600,
           showConfirmButton: false
         });
 
-        // ✅ Redirigir
         this.router.navigateByUrl('/shop');
       },
 
       error: (err: any) => {
-        const mensaje =
-          err?.error?.mensaje ||
-          err?.error ||
-          'Credenciales incorrectas';
+        console.error('ERROR REAL:', err);
 
+        // 🔴 Validaciones backend por campo
+        if (err.error?.codigo === 'VALIDACION') {
+          this.errores = err.error.errores;
+          return;
+        }
+
+        // 🔴 Error general
+        this.mensajeGeneral =
+          typeof err.error?.mensaje === 'string'
+            ? err.error.mensaje
+            : 'Credenciales incorrectas';
+
+        // Mostrar alerta global
         Swal.fire({
           title: 'Error',
-          text: mensaje,
+          text: this.mensajeGeneral,
           icon: 'error',
           confirmButtonColor: '#C6A97E'
         });
