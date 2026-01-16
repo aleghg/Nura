@@ -8,19 +8,11 @@
   left: 0;
   width: 100%;
   z-index: 50;
-
-  background: rgba(255, 253, 250, 0.55);
+  background: rgba(255, 253, 250, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-
-  margin: 0;
 }
-
-/* ===============================
-   CONTENIDO INTERNO
-================================ */
 
 .shop-header .inner {
   display: flex;
@@ -28,10 +20,6 @@
   justify-content: space-between;
   padding: 26px 6vw;
 }
-
-/* ===============================
-   LOGO
-================================ */
 
 .shop-header .logo {
   font-family: 'Playfair Display', serif;
@@ -42,43 +30,130 @@
 }
 
 /* ===============================
-   BUSCADOR
+   ACCIONES (LOGIN / LOGOUT / CARRITO)
 ================================ */
-
-.shop-search input {
-  background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  padding: 8px 14px;
-  color: #1c1c1c;
-  outline: none;
-}
-
-.shop-search input::placeholder {
-  color: #888;
-}
-
-/* ===============================
-   ACCIONES (LOGOUT / CARRITO)
-================================ */
-
 .shop-actions {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 0.8rem;
 }
 
-.shop-actions button {
-  background: none;
+.profile-btn, .logout-btn {
+  background: transparent;
   border: none;
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #1c1c1c;
   cursor: pointer;
+  font-weight: 500;
+  color: #333;
 }
 
-.shop-actions button:hover {
-  text-decoration: underline;
+.profile-icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* ===============================
+   CARRITO
+================================ */
+.cart-dropdown {
+  position: relative;
+}
+
+.cart-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem;
+}
+
+.cart-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #000;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0 6px;
+  border-radius: 50%;
+  transform: scale(1);
+  transition: transform 0.25s ease;
+}
+
+.cart-count.bump {
+  transform: scale(1.35);
+}
+
+/* ===============================
+   DROPDOWN DEL CARRITO
+================================ */
+.cart-menu {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  width: 280px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.2s ease;
+}
+
+.cart-item {
+  display: flex;
+  padding: 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  align-items: center;
+}
+
+.cart-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  margin-right: 8px;
+  border-radius: 4px;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.cart-footer {
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+.view-cart-btn {
+  background: #c7a97b;
+  border: none;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.view-cart-btn:hover {
+  background: #b69466;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }

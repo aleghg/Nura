@@ -21,7 +21,7 @@ export class AuthService {
       .pipe(
         tap(res => {
           localStorage.setItem('token', res.token);
-          localStorage.setItem('email', res.email);
+          localStorage.setItem('email', res.email); // 🔹 email guardado
           localStorage.setItem('rol', res.rol);
         })
       );
@@ -38,7 +38,6 @@ export class AuthService {
     return token !== null && token !== '';
   }
 
-
   getToken(): string | null {
     return localStorage.getItem('token');
   }
@@ -47,7 +46,10 @@ export class AuthService {
     return localStorage.getItem('rol');
   }
 
-
+  // 🔹 MÉTODO PARA OBTENER EL EMAIL
+  getEmail(): string | null {
+    return localStorage.getItem('email');
+  }
 
   // 📝 REGISTRO
   register(data: {

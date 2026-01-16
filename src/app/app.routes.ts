@@ -109,6 +109,14 @@ export const routes: Routes = [
     ]
   },
 
+  
+{
+  path: 'carrito',
+  loadComponent: () =>
+    import('./components/carrito/carrito')
+      .then(m => m.CarritoComponent)
+},
+
   /* =============================
      ❌ FALLBACK
   ============================== */

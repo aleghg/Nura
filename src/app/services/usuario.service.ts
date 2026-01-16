@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { Usuario } from '../models/usuario.model';
@@ -15,8 +15,16 @@ export class UsuarioService {
 
   // 🔐 PERFIL DEL USUARIO LOGUEADO
   getPerfil(): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.API}/me`);
-  }
+  const token = localStorage.getItem('token')!;
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<Usuario>(`${this.API}/me`, { headers });
+}
+
+actualizarPerfil(usuario: any): Observable<Usuario> {
+  const token = localStorage.getItem('token')!;
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.put<Usuario>(`${this.API}/me`, usuario, { headers });
+}
 
   // 👑 SOLO ADMIN
   listarUsuarios(): Observable<Usuario[]> {

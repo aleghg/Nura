@@ -1,0 +1,26 @@
+<section class="carrito">
+
+  <h2>Tu carrito</h2>
+
+  <div *ngIf="(cart$ | async)?.length === 0" class="vacio">
+    Tu carrito está vacío
+  </div>
+
+  <div class="item" *ngFor="let p of (cart$ | async)">
+    <img [src]="p.imagen" alt="{{ p.nombre }}" />
+
+    <div class="info">
+      <h4>{{ p.nombre }}</h4>
+      <p>${{ p.precio }}</p>
+      <span>Cantidad: {{ p.cantidad }}</span>
+    </div>
+
+    <button (click)="eliminar(p.idProducto)">✕</button>
+  </div>
+
+  <div class="total" *ngIf="(cart$ | async)?.length">
+    <strong>Total:</strong> ${{ total() }}
+    <button (click)="vaciar()">Vaciar</button>
+  </div>
+
+</section>

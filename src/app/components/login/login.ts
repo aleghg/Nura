@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; 
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     private fb: NonNullableFormBuilder,
     private auth: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // 🔎 Redirigir si ya hay sesión
@@ -73,8 +73,7 @@ export class LoginComponent implements OnInit {
 
     this.auth.login(data).subscribe({
       next: () => {
-        // ✅ AuthService ya guarda token
-
+        // ✅ AuthService ya guarda token y email en localStorage
         Swal.fire({
           title: 'Bienvenid@ ✨',
           text: 'Inicio de sesión exitoso',
@@ -110,5 +109,8 @@ export class LoginComponent implements OnInit {
         });
       }
     });
+
+
   }
+
 }
