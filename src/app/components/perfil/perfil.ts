@@ -1,69 +1,103 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { Component, OnInit } from '@angular/core'; 
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/usuario.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActualizarPerfilDTO } from '../../models/actualizarperfil.dto';
 
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.html',
-  styleUrls: ['./perfil.css']
+  styleUrls: ['./perfil.css'],
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule]
 })
 export class PerfilComponent implements OnInit {
 
   usuario!: Usuario;
-  perfilForm!: FormGroup;
-  mensaje = ''; // Mensaje de éxito o error
+  perfilForm: FormGroup;
+  mensaje = '';
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    // 🔹 Obtener perfil
-    this.http.get<Usuario>(`${environment.apiUrl}/usuarios/me`, { headers })
-      .subscribe({
-        next: (res) => {
-          this.usuario = res;
-
-          // Inicializar formulario con los datos del usuario
-          this.perfilForm = this.fb.group({
-            nombre: [this.usuario.nombre, [Validators.required, Validators.minLength(3)]],
-            email: [this.usuario.email, [Validators.required, Validators.email]],
-            password: ['', [Validators.minLength(6)]], // opcional, solo si quiere cambiar
-          });
-        },
-        error: (err) => console.error('Error al obtener perfil', err)
-      });
+  constructor(private fb: FormBuilder, private usuarioService: UsuarioService) {
+    this.perfilForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      currentPassword: [''],
+      newPassword: [''],
+      confirmPassword: ['']
+    }, { validators: this.passwordsMatch });
   }
 
-  // 🔹 Actualizar perfil
+  ngOnInit(): void {
+    this.usuarioService.getPerfil().subscribe({
+      next: (user: Usuario) => {
+        this.usuario = user;
+        this.perfilForm.patchValue({
+          nombre: user.nombre || '',
+          email: user.email || ''
+        });
+      },
+      error: (err: any) => {
+        console.error('Error al obtener perfil', err);
+      }
+    });
+  }
+
+  passwordsMatch(form: FormGroup) {
+    const newPass = form.get('newPassword')?.value;
+    const confirmPass = form.get('confirmPassword')?.value;
+    if (newPass && confirmPass && newPass !== confirmPass) {
+      return { passwordMismatch: true };
+    }
+    return null;
+  }
+
   actualizarPerfil(): void {
     if (!this.perfilForm.valid) {
       this.mensaje = 'Por favor completa correctamente los campos';
       return;
     }
 
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // 🔹 Crear DTO con datos a enviar
+    const dto: ActualizarPerfilDTO = {
+      nombre: this.perfilForm.value.nombre,
+      email: this.perfilForm.value.email
+    };
 
-    this.http.put<Usuario>(`${environment.apiUrl}/usuarios/me`, this.perfilForm.value, { headers })
-      .subscribe({
-        next: (res) => {
-          this.usuario = res;
-          this.mensaje = 'Perfil actualizado correctamente';
-          // Limpiar campo de contraseña
-          this.perfilForm.patchValue({ password: '' });
-        },
-        error: (err) => {
-          console.error('Error al actualizar perfil', err);
+    // 🔹 Solo agregar contraseña si el usuario quiere cambiarla
+    if (this.perfilForm.value.newPassword) {
+      if (!this.perfilForm.value.currentPassword) {
+        this.mensaje = 'Debes ingresar tu contraseña actual para cambiarla';
+        return;
+      }
+      dto.currentPassword = this.perfilForm.value.currentPassword;
+      dto.newPassword = this.perfilForm.value.newPassword;
+    }
+
+    // 🔹 Depuración: mostrar DTO antes de enviarlo
+    console.log('DTO a enviar:', dto);
+
+    // 🔹 Llamada al service
+    this.usuarioService.actualizarPerfil(dto).subscribe({
+      next: (user: Usuario) => {
+        this.usuario = user;
+        this.mensaje = 'Perfil actualizado correctamente';
+        this.perfilForm.patchValue({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      },
+      error: (err: any) => {
+        console.error('Error al actualizar perfil', err);
+        // 🔹 Manejo de errores según status
+        if (err.status === 400) {
+          this.mensaje = err.error?.message || 'Datos inválidos enviados al servidor';
+        } else if (err.status === 403) {
+          this.mensaje = 'Contraseña actual incorrecta o no tienes permisos';
+        } else if (err.status === 500) {
+          this.mensaje = 'Error interno del servidor';
+        } else {
           this.mensaje = 'Error al actualizar perfil';
         }
-      });
+      }
+    });
   }
 
 }

@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { Usuario } from '../models/usuario.model';
+import { ActualizarPerfilDTO } from '../models/actualizarperfil.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +21,14 @@ export class UsuarioService {
   return this.http.get<Usuario>(`${this.API}/me`, { headers });
 }
 
-actualizarPerfil(usuario: any): Observable<Usuario> {
-  const token = localStorage.getItem('token')!;
-  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  return this.http.put<Usuario>(`${this.API}/me`, usuario, { headers });
-}
+// 🔹 ACTUALIZAR PERFIL usando DTO
+  actualizarPerfil(dto: ActualizarPerfilDTO): Observable<Usuario> {
+    const token = localStorage.getItem('token')!;
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<Usuario>(`${this.API}/me`, dto, { headers });
+  }
 
-  // 👑 SOLO ADMIN
+  // 👑 SOLO ADMIN Listar todos los usuarios
   listarUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.API}/listar`);
   }

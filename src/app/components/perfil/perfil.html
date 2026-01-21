@@ -1,4 +1,57 @@
-<h2>Mi Perfil</h2>
-<p>Nombre: {{ usuario.nombre }}</p>
-<p>Email: {{ usuario.email }}</p>
-<p>Rol: {{ usuario.rol }}</p>
+<div class="perfil-wrapper">
+    <div class="card">
+
+        <!-- Imagen superior con gradiente -->
+        <div class="card__img"></div>
+
+        <!-- Avatar flotante -->
+        <div class="card__avatar">
+            <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="64" cy="64" fill="#ff6b81" r="60"></circle>
+                <circle cx="64" cy="64" fill="#ff4f6e" opacity="0.4" r="48"></circle>
+            </svg>
+        </div>
+
+        <!-- Títulos -->
+        <div class="card__title">Mi Perfil</div>
+        <div class="card__subtitle">Actualiza tus datos</div>
+
+        <!-- Formulario -->
+        <form [formGroup]="perfilForm" (ngSubmit)="actualizarPerfil()" class="card__form">
+
+            <div class="form-group">
+                <input type="text" formControlName="nombre" placeholder="Nombre">
+            </div>
+
+            <div class="form-group">
+                <input type="email" formControlName="email" placeholder="Email">
+            </div>
+
+            <hr class="divider">
+
+            <div class="form-group">
+                <input type="password" formControlName="currentPassword" placeholder="Contraseña actual">
+            </div>
+
+            <div class="form-group">
+                <input type="password" formControlName="newPassword" placeholder="Nueva contraseña">
+            </div>
+
+            <div class="form-group">
+                <input type="password" formControlName="confirmPassword" placeholder="Confirmar nueva contraseña">
+            </div>
+
+            <div *ngIf="perfilForm.errors?.['passwordMismatch']" class="error">
+                Las contraseñas no coinciden
+            </div>
+
+
+            <div *ngIf="mensaje" class="mensaje">{{ mensaje }}</div>
+
+            <button type="submit" [disabled]="perfilForm.invalid" class="card__btn">
+                Actualizar
+            </button>
+
+        </form>
+    </div>
+</div>

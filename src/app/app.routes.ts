@@ -117,6 +117,14 @@ export const routes: Routes = [
       .then(m => m.CarritoComponent)
 },
 
+// 💻 PERFIL DEL USUARIO (PRIVADO)
+{
+   path: 'perfil',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./components/perfil/perfil').then(m => m.PerfilComponent)
+},
+
   /* =============================
      ❌ FALLBACK
   ============================== */

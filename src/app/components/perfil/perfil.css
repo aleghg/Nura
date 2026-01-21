@@ -1,0 +1,156 @@
+/* Reset y evitar scroll */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Contenedor centrado */
+.perfil-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #ffe6f0, #ffc1d1);
+}
+
+/* CARD PRINCIPAL */
+.card {
+  width: 350px;
+  max-width: 90vw;
+  max-height: 95vh;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+
+/* IMAGEN SUPERIOR */
+.card__img {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #ff8aa0, #ff4f6e);
+  border-radius: 20px 20px 0 0;
+}
+
+/* AVATAR FLOTANTE */
+.card__avatar {
+  width: 90px;
+  height: 90px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -45px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* TITULOS */
+.card__title {
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #ff4f6e;
+}
+
+.card__subtitle {
+  font-size: 14px;
+  color: #ff85a2;
+  margin-bottom: 15px;
+}
+
+/* FORMULARIO */
+.card__form {
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card__form input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ffc0cb;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: 0.3s;
+}
+
+.card__form input:focus {
+  border-color: #ff4f6e;
+  outline: none;
+}
+
+/* Divisor */
+.divider {
+  border: none;
+  border-top: 1px solid #ffd1dc;
+  margin: 10px 0;
+}
+
+/* Mensajes */
+.card__form .mensaje {
+  text-align: center;
+  font-size: 13px;
+  color: #4CAF50;
+}
+
+.card__form .error {
+  font-size: 12px;
+  color: red;
+  text-align: center;
+}
+
+/* BOTON MODERNO */
+.card__btn {
+  padding: 10px 0;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #ff8aa0, #ff4f6e);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card__btn:hover {
+  background: linear-gradient(135deg, #ff4f6e, #ff8aa0);
+}
+
+/* RESPONSIVE */
+@media (max-height: 600px) {
+  .card {
+    max-height: 90vh;
+    padding-bottom: 15px;
+  }
+
+  .card__img {
+    height: 120px;
+  }
+
+  .card__avatar {
+    width: 70px;
+    height: 70px;
+    margin-top: -35px;
+  }
+}
+
+@media (max-width: 400px) {
+  .card {
+    width: 90vw;
+  }
+
+  .card__form input {
+    padding: 8px;
+  }
+}
