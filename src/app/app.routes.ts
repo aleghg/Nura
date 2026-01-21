@@ -40,7 +40,7 @@ export const routes: Routes = [
       {
         path: 'catalog',
         loadComponent: () =>
-          import('./features/catalog/catalog')
+          import('./components/catalog/catalog')
             .then(m => m.Catalog)
       },
 
@@ -48,7 +48,7 @@ export const routes: Routes = [
       {
         path: 'producto/:id',
         loadComponent: () =>
-          import('./features/product-detail/product-detail')
+          import('./components/product-detail/product-detail')
             .then(m => m.ProductDetail)
       },
 
@@ -123,6 +123,11 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./components/perfil/perfil').then(m => m.PerfilComponent)
+},
+
+{
+  path: 'categoria/:id',
+  loadComponent: () => import('./components/catalog/catalog').then(m => m.Catalog)
 },
 
   /* =============================

@@ -6,7 +6,7 @@ export interface Producto {
   descripcion?: string;
   precio: number;
   stock: number;
-  imagen: string;       // BASE64
   activo: boolean;
   categoria: Categoria;  
+  imagenBase64?: string; 
 }

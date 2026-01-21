@@ -1,7 +1,6 @@
 /* ===============================
    SHOP HEADER (FIXED & LIMPIO)
 ================================ */
-
 .shop-header {
   position: fixed;
   top: 0;
@@ -111,9 +110,10 @@
 
 .cart-item {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 8px;
   border-bottom: 1px solid rgba(0,0,0,0.05);
-  align-items: center;
 }
 
 .cart-item img {
@@ -129,6 +129,23 @@
   flex-direction: column;
   font-size: 0.85rem;
   color: #333;
+  flex: 1;
+}
+
+/* 🔹 Botón de eliminar item */
+.remove-item-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: red;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-left: 6px;
+  transition: color 0.2s ease;
+}
+
+.remove-item-btn:hover {
+  color: darkred;
 }
 
 .cart-footer {
@@ -137,6 +154,7 @@
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
+  border-top: 1px solid rgba(0,0,0,0.1);
 }
 
 .view-cart-btn {
@@ -147,12 +165,16 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
+  transition: background 0.2s ease;
 }
 
 .view-cart-btn:hover {
   background: #b69466;
 }
 
+/* ===============================
+   ANIMACIONES
+================================ */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }

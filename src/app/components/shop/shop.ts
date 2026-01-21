@@ -74,15 +74,22 @@ export class ShopComponent implements OnInit, AfterViewInit {
 
   // 🔎 Filtro por categoría
   filtrarPorCategoria(categoria: Categoria | null): void {
-    if (!categoria) {
-      this.productosFiltrados = [...this.productos];
-      return;
-    }
-
-    this.productosFiltrados = this.productos.filter(
-      p => p.categoria.idCategoria === categoria.idCategoria
-    );
+  if (!categoria) {
+    // Todos los productos
+    this.cargarProductos(); 
+    return;
   }
+
+  this.productoService.getByCategoria(categoria.idCategoria).subscribe({
+    next: (data: Producto[]) => {
+      this.productosFiltrados = data;
+    },
+    error: (err) => {
+      console.error('Error cargando productos por categoría', err);
+      this.errorProductos = err.error?.mensaje || 'Error cargando productos';
+    }
+  });
+}
 
   // 🔍 Buscador
   buscarProducto(): void {
@@ -94,10 +101,10 @@ export class ShopComponent implements OnInit, AfterViewInit {
 
   // 🖼 Imagen
   getImagen(producto: Producto): string {
-    return producto.imagen
-      ? 'data:image/png;base64,' + producto.imagen
-      : 'assets/no-image.png';
-  }
+  return producto.imagenBase64
+    ? 'data:image/png;base64,' + producto.imagenBase64
+    : 'assets/no-image.png';
+}
 
   // 🛒 Agregar al carrito
   agregarAlCarrito(producto: Producto): void {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,  HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -43,4 +43,15 @@ export class ProductoService {
         })
       );
   }
+
+  getByCategoria(categoriaId: number): Observable<Producto[]> {
+    const token = localStorage.getItem('token'); // o donde guardes tu JWT
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<Producto[]>(`${this.API}/categoria/${categoriaId}`, { headers });
+  }
+
+
 }

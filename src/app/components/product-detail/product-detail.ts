@@ -21,7 +21,7 @@ export class ProductDetail implements OnInit {
     private route: ActivatedRoute,
     private productoService: ProductoService,
     private cartService: CartService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.obtenerProducto();
@@ -48,9 +48,9 @@ export class ProductDetail implements OnInit {
 
   // 🖼️ Renderizar imagen Base64
   getImagen(): string {
-    if (!this.producto?.imagen) {
-      return 'assets/no-image.png'; // opcional
-    }
-    return 'data:image/jpeg;base64,' + this.producto.imagen;
+    return this.producto?.imagenBase64
+      ? 'data:image/jpeg;base64,' + this.producto.imagenBase64
+      : 'assets/no-image.png';
   }
+
 }

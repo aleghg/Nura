@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, Observable } from 'rxjs';
+import { tap, Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../environments/environment';
 import { LoginRequest, LoginResponse } from '../models/login.model';
 
@@ -12,7 +12,19 @@ export class AuthService {
 
   private API = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient) { }
+  // Observable del usuario logueado
+  private usuarioSubject = new BehaviorSubject<{ email: string; rol: string } | null>(null);
+  usuario$ = this.usuarioSubject.asObservable();
+
+
+  constructor(private http: HttpClient) {
+    // Inicializar desde localStorage si ya hay datos
+    const email = localStorage.getItem('email');
+    const rol = localStorage.getItem('rol');
+    if (email && rol) {
+      this.usuarioSubject.next({ email, rol });
+    }
+  }
 
   // 🔐 LOGIN
   login(data: LoginRequest): Observable<LoginResponse> {
@@ -21,15 +33,19 @@ export class AuthService {
       .pipe(
         tap(res => {
           localStorage.setItem('token', res.token);
-          localStorage.setItem('email', res.email); // 🔹 email guardado
+          localStorage.setItem('email', res.email);
           localStorage.setItem('rol', res.rol);
-        })
-      );
+
+        // Actualizar observable del usuario
+        this.usuarioSubject.next({ email: res.email, rol: res.rol });
+      })
+    );
   }
 
   // 🚪 LOGOUT
   logout(): void {
     localStorage.clear();
+    this.usuarioSubject.next(null); // Limpiar observable
   }
 
   // 🔎 AUTENTICACIÓN

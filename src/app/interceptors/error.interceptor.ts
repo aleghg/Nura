@@ -15,14 +15,12 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((err: HttpErrorResponse) => {
         let mensaje = 'Error desconocido';
 
-        // 🔹 Mensaje enviado por backend
         if (err.error?.mensaje) {
           mensaje = err.error.mensaje;
         } else if (err.status === 0) {
           mensaje = 'No se pudo conectar con el servidor';
         }
 
-        // 🔹 Alerta global
         Swal.fire({
           title: 'Error',
           text: mensaje,
@@ -30,7 +28,6 @@ export class ErrorInterceptor implements HttpInterceptor {
           confirmButtonColor: '#C6A97E'
         });
 
-        // 🔹 Si es 401, limpiar sesión y redirigir al login
         if (err.status === 401) {
           localStorage.clear();
           this.router.navigate(['/login']);
