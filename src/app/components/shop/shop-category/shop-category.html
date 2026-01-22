@@ -1,0 +1,39 @@
+<app-shop-header></app-shop-header>
+
+<section class="category-page">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/shop">Inicio</a>
+    <span>›</span>
+    <span>Categoría</span>
+  </nav>
+
+  <!-- Hero -->
+  <div class="category-hero reveal">
+    <h1>Productos</h1>
+    <p>Explora esta categoría</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Grid -->
+  <div class="category-grid">
+    <div class="category-card reveal"
+         *ngFor="let producto of productos; let i = index"
+         [style.transitionDelay]="(i * 80) + 'ms'">
+
+      <img [src]="getImagen(producto)" [alt]="producto.nombre">
+
+      <div class="overlay">
+        <h3>{{ producto.nombre }}</h3>
+        <span>${{ producto.precio | number }}</span>
+      </div>
+
+    </div>
+  </div>
+
+</section>

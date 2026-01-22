@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 // Services
@@ -34,22 +34,38 @@ export class ShopComponent implements OnInit, AfterViewInit {
   errorCategorias: string = '';
   errorProductos: string = '';
 
+  categoriaId: number | null = null;
+
   constructor(
     private productoService: ProductoService,
     private categoriaService: CategoriaService,
-    private carritoService: CarritoService
+    private carritoService: CarritoService,
+    private route: ActivatedRoute,
+    private router: Router // ✅ AGREGADO
   ) {}
 
   ngOnInit(): void {
+    console.log('🔥 Shop cargado');
+
     this.cargarCategorias();
-    this.cargarProductos();
+
+    // ✅ ESCUCHAR CAMBIO DE URL
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      this.categoriaId = id ? Number(id) : null;
+      console.log('➡️ Cambio de ruta categoría:', this.categoriaId);
+      this.cargarProductos();
+    });
   }
 
+  // =========================
   // 📂 Categorías
+  // =========================
   cargarCategorias(): void {
     this.categoriaService.getCategorias().subscribe({
       next: (data: Categoria[]) => {
         this.categorias = data.filter(c => c.activo);
+        console.log('📂 Categorías:', this.categorias);
       },
       error: (err) => {
         console.error('Error cargando categorías', err);
@@ -58,12 +74,32 @@ export class ShopComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // =========================
   // 📦 Productos
+  // =========================
   cargarProductos(): void {
+    if (this.categoriaId) {
+      this.productoService.getByCategoria(this.categoriaId).subscribe({
+        next: (data: Producto[]) => {
+          console.log('📦 Productos por categoría:', data);
+          this.productosFiltrados = this.normalizar(data);
+
+          return;
+        },
+        error: (err) => {
+          console.error('Error cargando productos por categoría', err);
+          this.errorProductos = err.error?.mensaje || 'Error cargando productos';
+        }
+      });
+      return;
+    }
+
+    // 🔁 comportamiento original (todos)
     this.productoService.getAll().subscribe({
       next: (data: Producto[]) => {
+        console.log('📦 Productos cargados:', data);
         this.productos = data.filter(p => p.activo);
-        this.productosFiltrados = [...this.productos];
+        this.productosFiltrados = this.normalizar(this.productos);
       },
       error: (err) => {
         console.error('Error cargando productos', err);
@@ -72,26 +108,23 @@ export class ShopComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // 🔎 Filtro por categoría
+  // =========================
+  // 🔎 Filtro por categoría (🔥 SE MANTIENE)
+  // =========================
   filtrarPorCategoria(categoria: Categoria | null): void {
-  if (!categoria) {
-    // Todos los productos
-    this.cargarProductos(); 
-    return;
+    console.log('👉 Click categoría:', categoria);
+
+    if (!categoria) {
+      this.router.navigate(['/shop']); // ✅ AGREGADO
+      return;
+    }
+
+    this.router.navigate(['/shop/categoria', categoria.idCategoria]); // ✅ AGREGADO
   }
 
-  this.productoService.getByCategoria(categoria.idCategoria).subscribe({
-    next: (data: Producto[]) => {
-      this.productosFiltrados = data;
-    },
-    error: (err) => {
-      console.error('Error cargando productos por categoría', err);
-      this.errorProductos = err.error?.mensaje || 'Error cargando productos';
-    }
-  });
-}
-
+  // =========================
   // 🔍 Buscador
+  // =========================
   buscarProducto(): void {
     const texto = this.busqueda.toLowerCase();
     this.productosFiltrados = this.productos.filter(p =>
@@ -99,14 +132,18 @@ export class ShopComponent implements OnInit, AfterViewInit {
     );
   }
 
-  // 🖼 Imagen
+  // =========================
+  // 🖼 Imagen Base64
+  // =========================
   getImagen(producto: Producto): string {
-  return producto.imagenBase64
-    ? 'data:image/png;base64,' + producto.imagenBase64
-    : 'assets/no-image.png';
-}
+    return producto.imagenBase64
+      ? 'data:image/png;base64,' + producto.imagenBase64.replace(/\s/g, '')
+      : 'assets/no-image.png';
+  }
 
-  // 🛒 Agregar al carrito
+  // =========================
+  // 🛒 Carrito
+  // =========================
   agregarAlCarrito(producto: Producto): void {
     this.carritoService.agregarProducto(producto.idProducto, 1).subscribe({
       next: () => {
@@ -130,7 +167,9 @@ export class ShopComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // =========================
   // ✨ Animaciones
+  // =========================
   ngAfterViewInit(): void {
     const observer = new IntersectionObserver(
       entries => {
@@ -145,5 +184,19 @@ export class ShopComponent implements OnInit, AfterViewInit {
     );
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  // =========================
+  // 🔧 Utilidad
+  // =========================
+  private normalizar(prod: Producto[]): Producto[] {
+    return prod.map(p => ({
+      ...p,
+      imagenBase64: p.imagenBase64?.replace(/\s/g, '')
+    }));
+  }
+
+  trackById(index: number, item: Producto) {
+    return item.idProducto;
   }
 }

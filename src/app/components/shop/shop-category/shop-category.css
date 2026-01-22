@@ -1,0 +1,86 @@
+.category-page {
+  padding: 2rem 3rem;
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+.breadcrumb {
+  font-size: .9rem;
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb a {
+  color: #444;
+  text-decoration: none;
+}
+
+.category-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.category-hero h1 {
+  font-size: 2.4rem;
+  font-weight: 600;
+}
+
+.category-hero p {
+  color: #777;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.8rem;
+}
+
+.category-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,.12);
+}
+
+.category-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent 55%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.category-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.overlay span {
+  font-size: .9rem;
+  opacity: .9;
+}

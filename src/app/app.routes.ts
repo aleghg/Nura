@@ -18,9 +18,11 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./features/home/home')
+          import('./components/home/home')
             .then(m => m.Home)
       },
+
+
 
       // 🔐 LOGIN / REGISTER (PÚBLICO)
       {
@@ -39,6 +41,13 @@ export const routes: Routes = [
       // 🛍️ CATÁLOGO PÚBLICO
       {
         path: 'catalog',
+        loadComponent: () =>
+          import('./components/catalog/catalog')
+            .then(m => m.Catalog)
+      },
+
+      {
+        path: 'categoria/:id',
         loadComponent: () =>
           import('./components/catalog/catalog')
             .then(m => m.Catalog)
@@ -66,7 +75,7 @@ export const routes: Routes = [
         path: 'cart',
         canActivate: [authGuard],
         loadComponent: () =>
-          import('./features/cart/cart')
+          import('./components/cart/cart')
             .then(m => m.CartComponent)
       },
 
@@ -75,7 +84,7 @@ export const routes: Routes = [
         path: 'checkout',
         canActivate: [authGuard],
         loadComponent: () =>
-          import('./features/checkout/checkout')
+          import('./components/checkout/checkout')
             .then(m => m.CheckoutComponent)
       },
 
@@ -105,30 +114,33 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/shop/shop')
             .then(m => m.ShopComponent)
+      },
+      {
+        path: 'categoria/:id',
+        loadComponent: () =>
+          import('./components/shop/shop-category/shop-category')
+            .then(m => m.ShopCategoryComponent) // ✅ AQUÍ
       }
+
+
     ]
   },
 
-  
-{
-  path: 'carrito',
-  loadComponent: () =>
-    import('./components/carrito/carrito')
-      .then(m => m.CarritoComponent)
-},
 
-// 💻 PERFIL DEL USUARIO (PRIVADO)
-{
-   path: 'perfil',
-  canActivate: [authGuard],
-  loadComponent: () =>
-    import('./components/perfil/perfil').then(m => m.PerfilComponent)
-},
+  {
+    path: 'carrito',
+    loadComponent: () =>
+      import('./components/carrito/carrito')
+        .then(m => m.CarritoComponent)
+  },
 
-{
-  path: 'categoria/:id',
-  loadComponent: () => import('./components/catalog/catalog').then(m => m.Catalog)
-},
+  // 💻 PERFIL DEL USUARIO (PRIVADO)
+  {
+    path: 'perfil',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./components/perfil/perfil').then(m => m.PerfilComponent)
+  },
 
   /* =============================
      ❌ FALLBACK

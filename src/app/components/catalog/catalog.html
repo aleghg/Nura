@@ -4,32 +4,72 @@
   </h1>
 
   <!-- Menú de categorías -->
-  <ul class="flex gap-4 mb-8">
-    <li *ngFor="let cat of categorias">
-      <a [routerLink]="['/categoria', cat.idCategoria]" class="text-[#C6A97E] hover:underline">
-        {{cat.nombre}}
-      </a>
-    </li>
-  </ul>
+  <ul class="flex gap-4 mb-8 justify-center flex-wrap">
+  <li>
+    <button
+      (click)="irACategoria(null)"
+      class="text-[#C6A97E] hover:underline"
+    >
+      Todos
+    </button>
+  </li>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16">
+  <li *ngFor="let cat of categorias">
+    <button
+      (click)="irACategoria(cat.idCategoria)"
+      class="text-[#C6A97E] hover:underline"
+    >
+      {{ cat.nombre }}
+    </button>
+  </li>
+</ul>
+
+
+
+  <!-- Loader -->
+  <p *ngIf="cargando" class="text-center text-gray-500 mt-10">
+    Cargando productos...
+  </p>
+
+  <!-- Error -->
+  <p *ngIf="error" class="text-center text-red-500 mt-10">
+    {{ error }}
+  </p>
+
+  <!-- Productos -->
+  <div
+    *ngIf="!cargando && productos.length"
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16"
+  >
     <div *ngFor="let p of productos" class="group cursor-pointer">
+
       <!-- Imagen -->
-      <div class="relative bg-[#F5F1EC] overflow-hidden aspect-[3/4] rounded-2xl border border-[#C6A97E] /60">
+      <div
+        class="relative bg-[#F5F1EC] overflow-hidden aspect-[3/4] rounded-2xl border border-[#C6A97E]/60"
+      >
         <span
           class="absolute top-4 left-4 z-10
                  bg-white/90 text-[#C6A97E]
                  text-[10px] tracking-widest px-4 py-1
-                 rounded-full uppercase">
+                 rounded-full uppercase"
+        >
           Nuevo
         </span>
-        <img 
-          [src]="p.imagenBase64 ? 'data:image/png;base64,' + p.imagenBase64 : p.imagenBase64" 
-          [alt]="p.nombre" 
-          class="absolute inset-0 w-full h-full object-cover 
+
+        <img
+          *ngIf="p.imagenBase64; else noImg"
+          [src]="'data:image/png;base64,' + p.imagenBase64"
+          [alt]="p.nombre"
+          class="absolute inset-0 w-full h-full object-cover
                  transition-transform duration-700 ease-out
                  group-hover:scale-105"
         />
+
+        <ng-template #noImg>
+          <div class="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
+            Sin imagen
+          </div>
+        </ng-template>
       </div>
 
       <!-- Info -->
@@ -37,17 +77,28 @@
         <h3 class="font-serif text-lg tracking-wide text-[#2E2E2E]">
           {{ p.nombre }}
         </h3>
-        <p class="text-sm mt-2 text-gray-600">
+
+        <p class="text-sm mt-2 text-gray-600 line-clamp-2">
           {{ p.descripcion }}
         </p>
+
         <p class="text-[#C6A97E] mt-2 font-medium">
           ${{ p.precio | number:'1.0-0' }}
         </p>
-        <button (click)="agregarAlCarrito(p.idProducto)"
-                class="mt-2 px-4 py-2 bg-[#C6A97E] text-white rounded hover:bg-[#B5945B]">
+
+        <button
+          (click)="agregarAlCarrito(p.idProducto)"
+          class="mt-3 px-5 py-2 bg-[#C6A97E] text-white rounded-full
+                 hover:bg-[#B5945B] transition"
+        >
           Agregar al carrito
         </button>
       </div>
     </div>
   </div>
+
+  <!-- Sin productos -->
+  <p *ngIf="!cargando && !productos.length" class="text-center text-gray-400 mt-16">
+    No hay productos en esta categoría
+  </p>
 </section>

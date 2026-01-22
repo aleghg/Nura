@@ -45,13 +45,18 @@ export class ProductoService {
   }
 
   getByCategoria(categoriaId: number): Observable<Producto[]> {
-    const token = localStorage.getItem('token'); // o donde guardes tu JWT
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+  });
 
-    return this.http.get<Producto[]>(`${this.API}/categoria/${categoriaId}`, { headers });
-  }
-
+  return this.http.get<Producto[]>(`${this.API}/categoria/${categoriaId}`, { headers })
+    .pipe(
+      catchError(err => {
+        console.error('Error obteniendo productos por categoría', err);
+        return throwError(() => err);
+      })
+    );
+}
 
 }
