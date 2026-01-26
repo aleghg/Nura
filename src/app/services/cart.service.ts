@@ -1,85 +1,72 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient,HttpHeaders  } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export interface CartItem {
-  idProducto: number;
+  id: number;
   nombre: string;
   precio: number;
-  imagen: string;
   cantidad: number;
+  imagen: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class CartService {
 
-  // ✅ ÚNICA fuente de verdad
-  private cartSubject = new BehaviorSubject<CartItem[]>([]);
-  cart$ = this.cartSubject.asObservable();
+  // Observable para mantener el estado del carrito en tiempo real
+  private carritoSubject = new BehaviorSubject<CartItem[]>([]);
+  carrito$ = this.carritoSubject.asObservable();
 
-  // 🔹 Getter seguro
-  private get items(): CartItem[] {
-    return this.cartSubject.value ?? [];
+private API_CLIENTE = `${environment.apiUrl}/carrito/mio`;
+private API_AGREGAR = `${environment.apiUrl}/carrito/agregar`;
+private API_ELIMINAR = `${environment.apiUrl}/carrito/eliminar`;
+private API_VACIAR = `${environment.apiUrl}/carrito/vaciar`;
+
+  constructor(private http: HttpClient) {
+    // Cargar carrito al iniciar el servicio
+    this.cargarCarrito();
   }
 
-  // =============================
-  // ➕ AGREGAR PRODUCTO
-  // =============================
-  add(producto: any): void {
-    const items = [...this.items];
+  /** 🔹 Crear headers con token */
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token') || '';
+    console.log('Token:', token);// <-- Verifica que exista
+    return new HttpHeaders({ Authorization: `Bearer ${token}` });
+  }
 
-    const existing = items.find(
-      p => p.idProducto === producto.idProducto
+  /** Cargar carrito del cliente */
+cargarCarrito(): void {
+  this.http.get<CartItem[]>(this.API_CLIENTE, { headers: this.getAuthHeaders() })
+    .subscribe(
+      items => this.carritoSubject.next(items),
+      err => console.error('Error cargando carrito', err)
     );
+}
 
-    if (existing) {
-      existing.cantidad += 1;
-    } else {
-      items.push({
-        idProducto: producto.idProducto,
-        nombre: producto.nombre,
-        precio: producto.precio,
-        imagen: producto.imagen,
-        cantidad: 1
-      });
-    }
+/** Agregar producto */
+agregarProducto(idProducto: number, cantidad: number = 1): Observable<any> {
+  console.log('🛒 Enviando al backend:', idProducto, cantidad);
+  return this.http.post(this.API_AGREGAR, { idProducto, cantidad }, { headers: this.getAuthHeaders() })
+    .pipe(tap(() => {
+      console.log('✅ Producto agregado, recargando carrito...');
+      this.cargarCarrito();
+    }));
+}
 
-    this.cartSubject.next(items);
-  }
 
-  // =============================
-  // ➖ QUITAR PRODUCTO
-  // =============================
-  remove(productoId: number): void {
-    const items = this.items.filter(
-      p => p.idProducto !== productoId
-    );
-    this.cartSubject.next(items);
-  }
+/** Remover producto */
+removerProducto(idProducto: number): void {
+  this.http.delete(`${this.API_ELIMINAR}/${idProducto}`, { headers: this.getAuthHeaders() })
+    .subscribe(() => this.cargarCarrito(), err => console.error('Error removiendo item', err));
+}
 
-  // =============================
-  // 🧹 VACIAR CARRITO
-  // =============================
-  clear(): void {
-    this.cartSubject.next([]);
-  }
+/** Vaciar carrito */
+limpiarCarrito(): void {
+  this.http.delete(this.API_VACIAR, { headers: this.getAuthHeaders() })
+    .subscribe(() => this.carritoSubject.next([]), err => console.error('Error limpiando carrito', err));
+}
 
-  // =============================
-  // 🔢 TOTAL PRECIO
-  // =============================
-  total(): number {
-    return this.items.reduce(
-      (total, item) => total + item.precio * item.cantidad,
-      0
-    );
-  }
-
-  // =============================
-  // 🔢 TOTAL CANTIDAD
-  // =============================
-  totalCantidad(): number {
-    return this.items.reduce(
-      (total, item) => total + item.cantidad,
-      0
-    );
-  }
 }

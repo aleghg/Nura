@@ -20,28 +20,28 @@
   </button>
 
   <!-- CARRITO CON DROPDOWN -->
-  <div class="cart-dropdown" (mouseenter)="dropdownOpen = true" (mouseleave)="dropdownOpen = false">
-    <button class="cart-btn" title="Carrito">
-      <img src="/icons/carrito-de-compras.png" class="cart-icon" />
-      <span class="cart-count" [class.bump]="animarCarrito">{{ carritoCantidad }}</span>
-    </button>
+  <div class="cart-dropdown" (mouseenter)="dropdownOpen = true" (mouseleave)="dropdownOpen = false"> 
+  <button class="cart-btn" title="Carrito" routerLink="/shop/carrito">
+    <img src="/icons/carrito-de-compras.png" class="cart-icon" />
+    <span class="cart-count" [class.bump]="animarCarrito">{{ carritoCantidad }}</span>
+  </button>
 
     <!-- MENU DROPDOWN -->
-    <div class="cart-menu" *ngIf="dropdownOpen && carritoCantidad > 0">
-      <div class="cart-item" *ngFor="let item of cartItems">
-        <img [src]="item.imagen" alt="{{ item.nombre }}" />
-        <div class="item-info">
-          <span>{{ item.nombre }}</span>
-          <span>{{ item.cantidad }} x ${{ item.precio }}</span>
-        </div>
-        <button (click)="removerItem(item.id)" class="remove-item-btn">✖</button>
+  <div class="cart-menu" *ngIf="dropdownOpen && carritoCantidad > 0">
+    <div class="cart-item" *ngFor="let item of cartItems">
+      <img [src]="item.imagen" alt="{{ item.nombre }}" />
+      <div class="item-info">
+        <span>{{ item.nombre }}</span>
+        <span>{{ item.cantidad }} x ${{ item.precio | number }}</span>
       </div>
-      <div class="cart-footer">
-        <span>Total: ${{ totalCarrito }}</span>
-        <button routerLink="/carrito" class="view-cart-btn">Ver carrito</button>
-      </div>
+      <button (click)="removerItem(item.id)" class="remove-item-btn">✖</button>
+    </div>
+    <div class="cart-footer">
+      <span>Total: ${{ totalCarrito | number }}</span>
+      <button routerLink="/shop/carrito" class="view-cart-btn">Ver carrito</button>
     </div>
   </div>
+</div>
 
   <!-- SALIR -->
   <button (click)="logout()">Salir</button>

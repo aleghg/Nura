@@ -2,55 +2,42 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductoService } from '../../services/producto.service';
 import { Producto } from '../../models/producto.model';
-import { CartService } from '../../core/services/cart';
+import { CartService } from '../../services/cart.service';
+import { ShopHeaderComponent } from '../../shared/ui/header/shop-header';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,  ShopHeaderComponent],
   templateUrl: './product-detail.html',
   styleUrls: ['./product-detail.css']
 })
 export class ProductDetail implements OnInit {
 
   producto!: Producto;
+  cantidad: number = 1;
 
   constructor(
     private route: ActivatedRoute,
-    private productoService: ProductoService,
     private cartService: CartService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.obtenerProducto();
+    this.producto = this.route.snapshot.data['producto'];
   }
 
-  // 🔹 Obtener producto por ID desde backend
-  obtenerProducto(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-
-    this.productoService.getById(id).subscribe({
-      next: (data: Producto) => {
-        this.producto = data;
-      },
-      error: (err: any) => {
-        console.error('Error al cargar producto', err);
-      }
-    });
-  }
-
-  // 🛒 Agregar al carrito
+  /// 🛒 Agregar al carrito
   add(): void {
-    this.cartService.add(this.producto);
-  }
+  console.log('🛒 Click AGREGAR A LA BOLSA:', this.producto.idProducto);
+  this.cartService.agregarProducto(this.producto.idProducto, this.cantidad).subscribe();
+}
 
-  // 🖼️ Renderizar imagen Base64
+
+  // 🖼️ Imagen optimizada
   getImagen(): string {
     return this.producto?.imagenBase64
-      ? 'data:image/jpeg;base64,' + this.producto.imagenBase64
+      ? 'data:image/jpeg;base64,' + this.producto.imagenBase64.replace(/\s/g, '')
       : 'assets/no-image.png';
   }
-
 }

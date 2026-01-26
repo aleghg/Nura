@@ -1,0 +1,36 @@
+.cart-page {
+  padding: 10rem 6rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.cart-item {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+.cart-item img {
+  width: 120px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.info h3 {
+  margin: 0;
+}
+
+.cta {
+  border: 1px solid #111;
+  padding: 1rem 4rem;
+  background: transparent;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.cta:hover {
+  background: #111;
+  color: #fff;
+}

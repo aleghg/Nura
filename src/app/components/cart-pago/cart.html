@@ -1,0 +1,23 @@
+<app-shop-header></app-shop-header>
+
+<section class="cart-page">
+
+  <h1>Tu Bolsa</h1>
+
+  <p *ngIf="items.length === 0">No hay productos aún.</p>
+
+  <div *ngFor="let p of items" class="cart-item">
+    <img [src]="p.imagen" alt="{{ p.nombre }}">
+    <div class="info">
+      <h3>{{ p.nombre }}</h3>
+      <p>{{ p.cantidad }} x ${{ p.precio | number }}</p>
+      <button (click)="eliminar(p.id)">Eliminar</button>
+    </div>
+  </div>
+
+  <div class="cart-total" *ngIf="items.length">
+    <h2>Total: ${{ total() | number }}</h2>
+    <button class="cta" (click)="pagar()">PAGAR</button>
+  </div>
+
+</section>

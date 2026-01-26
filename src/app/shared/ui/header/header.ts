@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
-import { CartComponent } from "../../../components/cart/cart";
+import { CartComponent } from '../../../components/cart-pago/cart';
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common'; // 🔹 IMPORTANTE PARA *ngIf y *ngFor
 
@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common'; // 🔹 IMPORTANTE PARA *ngIf y 
     RouterModule,
     RouterLink,
     CartComponent
+    
   ],
   templateUrl: './header.html',
   styleUrls: ['./header.css'] // 🔹 Asegúrate que sea styleUrls, no styleUrl

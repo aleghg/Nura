@@ -2,6 +2,12 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 
+// ✅ RESOLVERS (AGREGADOS)
+import { categoriasResolver } from './resolvers/categoria.resolver';
+import { productosResolver } from './resolvers/productos.resolver';
+import { productosCategoriaResolver } from './resolvers/productos-categoria.resolver';
+import { productDetailResolver } from './resolvers/product-detail.resolver';
+
 export const routes: Routes = [
 
   /* =============================
@@ -21,8 +27,6 @@ export const routes: Routes = [
           import('./components/home/home')
             .then(m => m.Home)
       },
-
-
 
       // 🔐 LOGIN / REGISTER (PÚBLICO)
       {
@@ -58,7 +62,10 @@ export const routes: Routes = [
         path: 'producto/:id',
         loadComponent: () =>
           import('./components/product-detail/product-detail')
-            .then(m => m.ProductDetail)
+            .then(m => m.ProductDetail),
+        resolve: {
+          producto: productDetailResolver
+        }
       },
 
       // 🧪 RUTA PROTEGIDA DE PRUEBA
@@ -75,9 +82,10 @@ export const routes: Routes = [
         path: 'cart',
         canActivate: [authGuard],
         loadComponent: () =>
-          import('./components/cart/cart')
+          import('./components/cart-pago/cart')
             .then(m => m.CartComponent)
       },
+
 
       // 💳 CHECKOUT (PRIVADO)
       {
@@ -113,25 +121,47 @@ export const routes: Routes = [
         path: '',
         loadComponent: () =>
           import('./components/shop/shop')
-            .then(m => m.ShopComponent)
+            .then(m => m.ShopComponent),
+        resolve: {
+          categorias: categoriasResolver,
+          productos: productosResolver
+        }
       },
       {
         path: 'categoria/:id',
         loadComponent: () =>
           import('./components/shop/shop-category/shop-category')
-            .then(m => m.ShopCategoryComponent) // ✅ AQUÍ
+            .then(m => m.ShopCategoryComponent),
+        resolve: {
+          productos: productosCategoriaResolver
+        }
+      },
+
+      // ✅ NUEVA RUTA CORRECTA
+      {
+        path: 'producto/:id',
+        loadComponent: () =>
+          import('./components/product-detail/product-detail')
+            .then(m => m.ProductDetail),
+        resolve: {
+          producto: productDetailResolver
+        }
       }
-
-
     ]
   },
 
+  {
+    path: 'shop/carrito',
+    loadComponent: () =>
+      import('./components/cart-pago/cart')
+        .then(m => m.CartComponent)
+  },
 
   {
     path: 'carrito',
     loadComponent: () =>
-      import('./components/carrito/carrito')
-        .then(m => m.CarritoComponent)
+      import('./components/cart-pago/cart')
+        .then(m => m.CartComponent)
   },
 
   // 💻 PERFIL DEL USUARIO (PRIVADO)

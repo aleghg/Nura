@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../core/services/cart';
-import { PaymentService } from '../../core/services/payment';
+import { PaymentService } from '../../services/pago.service';
 import { Observable, take, map } from 'rxjs';
 
 @Component({

@@ -1,5 +1,7 @@
 <app-shop-header></app-shop-header>
 
+<router-outlet></router-outlet>
+
 <section class="shop">
 
   <div class="shop-editorial-bg"></div>
@@ -11,7 +13,7 @@
       <p>Explora nuestra colección de productos exclusivos</p>
     </div>
 
-    <!-- 🔴 Mensaje de error categorías -->
+    <!-- 🔴 Error categorías -->
     <div *ngIf="errorCategorias" class="alert alert-danger">
       {{ errorCategorias }}
     </div>
@@ -26,34 +28,50 @@
       </button>
     </div>
 
-    <!-- Buscador -->
+    <!-- 🔍 Buscador (🔥 AHORA FUNCIONA) -->
     <div class="shop-search reveal">
       <input type="text"
              placeholder="Buscar productos..."
              [(ngModel)]="busqueda"
-             (keyup)="buscarProducto()">
+             (input)="buscarProducto()">
     </div>
 
-    <!-- 🔴 Mensaje de error productos -->
+    <!-- 🔴 Error productos -->
     <div *ngIf="errorProductos" class="alert alert-danger">
       {{ errorProductos }}
     </div>
 
-    <!-- Grid de productos -->
-    <div class="shop-grid">
-      <div class="product-card reveal"
-           *ngFor="let producto of productosFiltrados; let i = index"
-           [style.transitionDelay]="(i * 120) + 'ms'">
+    <!-- 🦴 Skeleton -->
+    <div class="shop-grid" *ngIf="cargando">
+      <div class="product-card skeleton" *ngFor="let s of [1,2,3,4,5,6,7,8]"></div>
+    </div>
 
-        <img [src]="getImagen(producto)" [alt]="producto.nombre">
+    <!-- Grid -->
+    <div class="shop-grid" *ngIf="!cargando">
+      <div class="product-card reveal"
+           *ngFor="let producto of productosFiltrados; let i = index; trackBy: trackById"
+     [style.transitionDelay]="(i * 120) + 'ms'"
+     (click)="irADetalle(producto)"
+     style="cursor:pointer">
+
+        <!-- ✅ CLICK A DETALLE -->
+        <img
+    [src]="getImagen(producto)"
+    [alt]="producto.nombre"
+    style="pointer-events:none"
+  >
 
         <div class="product-info">
+          <!-- ✅ CLICK A DETALLE -->
           <h3>{{ producto.nombre }}</h3>
-          <span class="price">${{ producto.precio | number }}</span>
-          <p>{{ producto.descripcion }}</p>
-          <p><strong>Categoría:</strong> {{ producto.categoria?.nombre }}</p>
-          <p><strong>Stock:</strong> {{ producto.stock }}</p>
-          <button (click)="agregarAlCarrito(producto)">Agregar al carrito</button>
+    <span class="price">${{ producto.precio | number }}</span>
+    <p>{{ producto.descripcion }}</p>
+    <p><strong>Categoría:</strong> {{ producto.categoria?.nombre }}</p>
+    <p><strong>Stock:</strong> {{ producto.stock }}</p>
+
+    <button (click)="agregarAlCarrito(producto); $event.stopPropagation()">
+      Agregar al carrito
+    </button>
         </div>
       </div>
     </div>

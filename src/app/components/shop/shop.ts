@@ -1,12 +1,12 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core'; 
+import { Component, OnInit, AfterViewInit } from '@angular/core';  
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 // Services
 import { ProductoService } from '../../services/producto.service';
 import { CategoriaService } from '../../services/categoria.service';
-import { CarritoService } from '../../services/carrito.service';
+import { CartService } from '../../services/cart.service';
 
 // Models
 import { Producto } from '../../models/producto.model';
@@ -29,6 +29,7 @@ export class ShopComponent implements OnInit, AfterViewInit {
   productos: Producto[] = [];
   productosFiltrados: Producto[] = [];
   busqueda: string = '';
+  cargando = true;
 
   // 🔴 Mensajes de error
   errorCategorias: string = '';
@@ -39,16 +40,17 @@ export class ShopComponent implements OnInit, AfterViewInit {
   constructor(
     private productoService: ProductoService,
     private categoriaService: CategoriaService,
-    private carritoService: CarritoService,
+    private cartService: CartService,
     private route: ActivatedRoute,
-    private router: Router // ✅ AGREGADO
+    private router: Router 
   ) {}
 
   ngOnInit(): void {
     console.log('🔥 Shop cargado');
 
     this.cargarCategorias();
-
+    
+    
     // ✅ ESCUCHAR CAMBIO DE URL
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -56,6 +58,23 @@ export class ShopComponent implements OnInit, AfterViewInit {
       console.log('➡️ Cambio de ruta categoría:', this.categoriaId);
       this.cargarProductos();
     });
+
+    // ✅ DATOS DEL RESOLVER (SE MANTIENE, PERO YA NO PISA)
+    this.route.data.subscribe(data => {
+      if (data['categorias']) {
+        this.categorias = data['categorias'].filter((c: Categoria) => c.activo);
+      }
+
+      if (data['productos'] && this.productos.length === 0) {
+        this.productos = data['productos'].filter((p: Producto) => p.activo);
+        this.productosFiltrados = this.normalizar(this.productos);
+        this.cargando = false;
+      }
+    });
+
+    setTimeout(() => {
+      console.log('🧪 Producto real:', this.productos[0]);
+    }, 1000);
   }
 
   // =========================
@@ -78,17 +97,21 @@ export class ShopComponent implements OnInit, AfterViewInit {
   // 📦 Productos
   // =========================
   cargarProductos(): void {
+    this.cargando = true;
+
     if (this.categoriaId) {
       this.productoService.getByCategoria(this.categoriaId).subscribe({
         next: (data: Producto[]) => {
           console.log('📦 Productos por categoría:', data);
-          this.productosFiltrados = this.normalizar(data);
-
+          this.productos = data.filter(p => p.activo);
+          this.productosFiltrados = this.normalizar(this.productos);
+          this.cargando = false;
           return;
         },
         error: (err) => {
           console.error('Error cargando productos por categoría', err);
           this.errorProductos = err.error?.mensaje || 'Error cargando productos';
+          this.cargando = false;
         }
       });
       return;
@@ -100,36 +123,50 @@ export class ShopComponent implements OnInit, AfterViewInit {
         console.log('📦 Productos cargados:', data);
         this.productos = data.filter(p => p.activo);
         this.productosFiltrados = this.normalizar(this.productos);
+        this.cargando = false;
       },
       error: (err) => {
         console.error('Error cargando productos', err);
         this.errorProductos = err.error?.mensaje || 'Error cargando productos';
+        this.cargando = false;
       }
     });
   }
 
   // =========================
-  // 🔎 Filtro por categoría (🔥 SE MANTIENE)
+  // 🔎 Filtro por categoría 
   // =========================
   filtrarPorCategoria(categoria: Categoria | null): void {
     console.log('👉 Click categoría:', categoria);
 
     if (!categoria) {
-      this.router.navigate(['/shop']); // ✅ AGREGADO
+      this.router.navigate(['/shop']); 
       return;
     }
 
-    this.router.navigate(['/shop/categoria', categoria.idCategoria]); // ✅ AGREGADO
+    this.router.navigate(['/shop/categoria', categoria.idCategoria]);
   }
 
   // =========================
-  // 🔍 Buscador
+  // 🔍 Buscador (🔥 YA FUNCIONA)
   // =========================
   buscarProducto(): void {
-    const texto = this.busqueda.toLowerCase();
-    this.productosFiltrados = this.productos.filter(p =>
-      p.nombre.toLowerCase().includes(texto)
+    console.log('🔍 Buscando:', this.busqueda);
+
+    const texto = this.busqueda.toLowerCase().trim();
+
+    if (!texto) {
+      this.productosFiltrados = this.normalizar(this.productos);
+      return;
+    }
+
+    this.productosFiltrados = this.normalizar(
+      this.productos.filter(p =>
+        JSON.stringify(p).toLowerCase().includes(texto)
+      )
     );
+
+    console.log('📦 Resultado:', this.productosFiltrados.length);
   }
 
   // =========================
@@ -145,7 +182,7 @@ export class ShopComponent implements OnInit, AfterViewInit {
   // 🛒 Carrito
   // =========================
   agregarAlCarrito(producto: Producto): void {
-    this.carritoService.agregarProducto(producto.idProducto, 1).subscribe({
+    this.cartService.agregarProducto(producto.idProducto, 1).subscribe({
       next: () => {
         Swal.fire({
           title: '¡Agregado! 🛒',
@@ -166,6 +203,13 @@ export class ShopComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  // =========================
+  // 👉 Click → detalle
+  // =========================
+  irADetalle(producto: Producto) {
+  this.router.navigate(['/shop/producto', producto.idProducto]);
+}
 
   // =========================
   // ✨ Animaciones

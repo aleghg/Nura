@@ -1,4 +1,5 @@
 <app-shop-header></app-shop-header>
+<router-outlet></router-outlet>
 
 <section class="category-page">
 
@@ -22,13 +23,24 @@
 
   <!-- Grid -->
   <div class="category-grid">
-    <div class="category-card reveal"
-         *ngFor="let producto of productos; let i = index"
-         [style.transitionDelay]="(i * 80) + 'ms'">
+    <div
+      class="category-card reveal"
+      *ngFor="let producto of productos; let i = index"
+      [style.transitionDelay]="(i * 80) + 'ms'"
+      style="cursor:pointer"
+      (click)="irADetalle(producto)"
+    >
 
-      <img [src]="getImagen(producto)" [alt]="producto.nombre">
+      <!-- ✅ CLICK FUNCIONAL -->
+      <img
+        [src]="getImagen(producto)"
+        [alt]="producto.nombre"
+        class="clickable"
+        style="pointer-events:none"
+      >
 
       <div class="overlay">
+        <!-- ✅ CLICK FUNCIONAL -->
         <h3>{{ producto.nombre }}</h3>
         <span>${{ producto.precio | number }}</span>
       </div>
