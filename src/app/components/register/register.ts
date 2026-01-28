@@ -100,7 +100,7 @@ export class RegisterComponent implements OnInit {
       next: (res) => {
         Swal.fire({
           title: 'Cuenta creada 🎉',
-          text: res.mensaje,
+          text: (res as any).mensaje,
           icon: 'success',
           confirmButtonColor: '#C6A97E'
         });

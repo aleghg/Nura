@@ -1,49 +1,47 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { CartService, CartItem } from '../../../services/cart.service';
+import { CartService, CarritoDetalle } from '../../../services/cart.service';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
-
-
+import { SafeImagePipe } from '../../../pipes/safe-image-pipe';
 
 @Component({
   selector: 'app-shop-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SafeImagePipe],
   templateUrl: './shop-header.html',
   styleUrls: ['./shop-header.css']
 })
 export class ShopHeaderComponent implements OnInit {
 
-
-  // Variables para dropdown del carrito
-  carritoCantidad: number = 0;
-  cartItems: CartItem[] = [];
-  totalCarrito: number = 0;
-  dropdownOpen: boolean = false;
-  animarCarrito: boolean = false;
+  carritoCantidad = 0;
+  cartItems: CarritoDetalle[] = [];
+  totalCarrito = 0;
+  dropdownOpen = false;
+  animarCarrito = false;
 
   usuario$!: Observable<{ email: string; rol: string } | null>;
 
   constructor(
     public auth: AuthService,
     private cartService: CartService,
-    private router: Router 
+    private router: Router
   ) {
-    
-    // Inicializar observable dentro del constructor
-    this.usuario$ = this.auth.usuario$;}
+    this.usuario$ = this.auth.usuario$;
+  }
 
   ngOnInit(): void {
-    // Suscribirse a cambios del carrito desde el servicio
     this.cartService.carrito$.subscribe(items => {
-    console.log('🛒 Header recibió carrito:', items);
-    this.cartItems = items;
-    this.carritoCantidad = items.reduce((sum, i) => sum + i.cantidad, 0);
-    this.totalCarrito = items.reduce((sum, i) => sum + i.cantidad * i.precio, 0);
+      console.log('🛒 Header recibió carrito:', items);
+      this.cartItems = items;
 
-      // Animación al agregar item
+      this.carritoCantidad = items.reduce((sum, i) => sum + i.cantidad, 0);
+      this.totalCarrito = items.reduce(
+        (sum, i) => sum + i.producto.precio * i.cantidad,
+        0
+      );
+
       if (items.length) {
         this.animarCarrito = true;
         setTimeout(() => this.animarCarrito = false, 300);
@@ -52,8 +50,8 @@ export class ShopHeaderComponent implements OnInit {
   }
 
   removerItem(idProducto: number): void {
-  this.cartService.removerProducto(idProducto);
-}
+    this.cartService.removerProducto(idProducto);
+  }
 
   openLogin(): void {
     this.router.navigate(['/login']);
@@ -67,4 +65,9 @@ export class ShopHeaderComponent implements OnInit {
   irAlCarrito() {
     this.router.navigate(['/shop/carrito']);
   }
+
+  onImgError(event: Event) {
+  (event.target as HTMLImageElement).src = '/assets/no-image.png';
+}
+
 }

@@ -7,12 +7,18 @@
   <p *ngIf="items.length === 0">No hay productos aún.</p>
 
   <div *ngFor="let p of items" class="cart-item">
-    <img [src]="p.imagen" alt="{{ p.nombre }}">
-    <div class="info">
-      <h3>{{ p.nombre }}</h3>
-      <p>{{ p.cantidad }} x ${{ p.precio | number }}</p>
-      <button (click)="eliminar(p.id)">Eliminar</button>
-    </div>
+    <ng-container *ngIf="p.producto">
+      <img
+        [src]="p.producto.imagen | safeImage"
+        (error)="onImgError($event)"
+        alt="{{ p.producto.nombre }}">
+
+      <div class="info">
+        <h3>{{ p.producto.nombre }}</h3>
+        <p>{{ p.cantidad }} x ${{ p.producto.precio | number }}</p>
+        <button (click)="eliminar(p.producto.idProducto)">Eliminar</button>
+      </div>
+    </ng-container>
   </div>
 
   <div class="cart-total" *ngIf="items.length">

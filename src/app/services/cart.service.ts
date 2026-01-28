@@ -1,14 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders  } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 
-export interface CartItem {
-  id: number;
+export interface Producto {
+  idProducto: number;
   nombre: string;
   precio: number;
-  cantidad: number;
   imagen: string;
+}
+
+export interface CarritoDetalle {
+  idDetalle: number;
+  producto: Producto;
+  cantidad: number;
+  precioUnitario: number;
+  subtotal: number;
 }
 
 @Injectable({
@@ -16,57 +23,62 @@ export interface CartItem {
 })
 export class CartService {
 
-  // Observable para mantener el estado del carrito en tiempo real
-  private carritoSubject = new BehaviorSubject<CartItem[]>([]);
+  private carritoSubject = new BehaviorSubject<CarritoDetalle[]>([]);
   carrito$ = this.carritoSubject.asObservable();
 
-private API_CLIENTE = `${environment.apiUrl}/carrito/mio`;
-private API_AGREGAR = `${environment.apiUrl}/carrito/agregar`;
-private API_ELIMINAR = `${environment.apiUrl}/carrito/eliminar`;
-private API_VACIAR = `${environment.apiUrl}/carrito/vaciar`;
+  private API_CLIENTE = `${environment.apiUrl}/carrito/mio`;
+  private API_AGREGAR = `${environment.apiUrl}/carrito/agregar`;
+  private API_ELIMINAR = `${environment.apiUrl}/carrito/eliminar`;
+  private API_VACIAR = `${environment.apiUrl}/carrito/vaciar`;
+  private cargado = false;
 
   constructor(private http: HttpClient) {
-    // Cargar carrito al iniciar el servicio
     this.cargarCarrito();
   }
 
-  /** 🔹 Crear headers con token */
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token') || '';
-    console.log('Token:', token);// <-- Verifica que exista
-    return new HttpHeaders({ Authorization: `Bearer ${token}` });
+  /** 🔄 Cargar carrito */
+  cargarCarrito(): void {
+
+    if (this.cargado) return;
+    this.cargado = true;
+
+    this.http.get<CarritoDetalle[]>(this.API_CLIENTE).subscribe({
+      next: items => {
+        console.log('🛒 Carrito backend:', items);
+        this.carritoSubject.next(items);
+      },
+      error: err => {
+        console.error('Error cargando carrito', err);
+        this.cargado = false;
+      }
+    });
   }
 
-  /** Cargar carrito del cliente */
-cargarCarrito(): void {
-  this.http.get<CartItem[]>(this.API_CLIENTE, { headers: this.getAuthHeaders() })
-    .subscribe(
-      items => this.carritoSubject.next(items),
-      err => console.error('Error cargando carrito', err)
-    );
-}
+  refresh(): void {
+    this.cargado = false;
+    this.cargarCarrito();
+  }
 
-/** Agregar producto */
-agregarProducto(idProducto: number, cantidad: number = 1): Observable<any> {
-  console.log('🛒 Enviando al backend:', idProducto, cantidad);
-  return this.http.post(this.API_AGREGAR, { idProducto, cantidad }, { headers: this.getAuthHeaders() })
-    .pipe(tap(() => {
-      console.log('✅ Producto agregado, recargando carrito...');
-      this.cargarCarrito();
-    }));
-}
+  /** ➕ Agregar producto */
+  agregarProducto(idProducto: number, cantidad: number = 1): Observable<any> {
+    return this.http.post(this.API_AGREGAR, {
+      productoId: idProducto,
+      cantidad
+    }).pipe(tap(() => this.refresh()));
+  }
 
+  /** ❌ Eliminar producto */
+  removerProducto(idProducto: number): void {
+    this.http.delete(`${this.API_ELIMINAR}/${idProducto}`)
+      .subscribe(() => this.refresh());
+  }
 
-/** Remover producto */
-removerProducto(idProducto: number): void {
-  this.http.delete(`${this.API_ELIMINAR}/${idProducto}`, { headers: this.getAuthHeaders() })
-    .subscribe(() => this.cargarCarrito(), err => console.error('Error removiendo item', err));
-}
-
-/** Vaciar carrito */
-limpiarCarrito(): void {
-  this.http.delete(this.API_VACIAR, { headers: this.getAuthHeaders() })
-    .subscribe(() => this.carritoSubject.next([]), err => console.error('Error limpiando carrito', err));
-}
-
+  /** 🧹 Vaciar carrito */
+  limpiarCarrito(): void {
+    this.http.delete(this.API_VACIAR)
+      .subscribe(
+        () => this.carritoSubject.next([]),
+        err => console.error('Error limpiando carrito', err)
+      );
+  }
 }

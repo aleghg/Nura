@@ -4,12 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Producto } from '../../models/producto.model';
 import { CartService } from '../../services/cart.service';
-import { ShopHeaderComponent } from '../../shared/ui/header/shop-header';
+
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule,  ShopHeaderComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './product-detail.html',
   styleUrls: ['./product-detail.css']
 })

@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/usuario.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
+
   selector: 'app-usuarios',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './usuarios.html'
 })
 export class UsuariosComponent implements OnInit {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartService } from '../../core/services/cart';
+import { CartService } from '../../services/cart.service';
 import { PaymentService } from '../../services/pago.service';
 import { Observable, take, map } from 'rxjs';
 
@@ -18,7 +18,7 @@ export class CheckoutComponent {
     private cartService: CartService,
     private paymentService: PaymentService
   ) {
-    this.items$ = this.cartService.items$;
+    this.cartService;
 
     // ✅ EL TOTAL SE CALCULA AQUÍ
     this.total$ = this.items$.pipe(

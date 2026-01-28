@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ProductoService } from '../../services/producto.service';
-import { CarritoService } from '../../services/carrito.service';
+import { CartService } from '../../services/cart.service';
 import { CategoriaService } from '../../services/categoria.service';
 import { Producto } from '../../models/producto.model';
 
@@ -28,7 +28,7 @@ export class Catalog implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productoService: ProductoService,
-    private carritoService: CarritoService,
+    private cartService: CartService,
     private categoriaService: CategoriaService
   ) {
 
@@ -96,7 +96,7 @@ export class Catalog implements OnInit {
   }
 
   agregarAlCarrito(idProducto: number): void {
-    this.carritoService.agregarProducto(idProducto).subscribe({
+    this.cartService.agregarProducto(idProducto).subscribe({
       next: () => alert('Producto agregado al carrito'),
       error: err => console.error('Error agregando al carrito', err)
     });

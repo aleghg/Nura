@@ -1,4 +1,4 @@
-<header class="shop-header"> 
+<header class="shop-header">
   <div class="inner">
 
     <!-- LOGO -->
@@ -12,41 +12,45 @@
       </ng-container>
 
       <!-- 👤 CLIENTE -->
-<ng-container *ngIf="auth.getRol() === 'CLIENTE' && (usuario$ | async) as usuario">
+      <ng-container *ngIf="auth.getRol() === 'CLIENTE' && (usuario$ | async) as usuario">
 
-  <!-- PERFIL -->
-  <button routerLink="/perfil" class="profile-btn" title="Ver perfil">
-    <img src="/icons/perfil.png" alt="Perfil" class="profile-icon" />
-  </button>
+        <!-- PERFIL -->
+        <button routerLink="/perfil" class="profile-btn" title="Ver perfil">
+          <img src="/icons/perfil.png" alt="Perfil" class="profile-icon" />
+        </button>
 
-  <!-- CARRITO CON DROPDOWN -->
-  <div class="cart-dropdown" (mouseenter)="dropdownOpen = true" (mouseleave)="dropdownOpen = false"> 
-  <button class="cart-btn" title="Carrito" routerLink="/shop/carrito">
-    <img src="/icons/carrito-de-compras.png" class="cart-icon" />
-    <span class="cart-count" [class.bump]="animarCarrito">{{ carritoCantidad }}</span>
-  </button>
+        <!-- CARRITO CON DROPDOWN -->
+        <div class="cart-dropdown" (mouseenter)="dropdownOpen = true" (mouseleave)="dropdownOpen = false">
+          <button class="cart-btn" title="Carrito" routerLink="/shop/carrito">
+            <img src="/icons/carrito-de-compras.png" class="cart-icon" />
+            <span class="cart-count" [class.bump]="animarCarrito">{{ carritoCantidad }}</span>
+          </button>
 
-    <!-- MENU DROPDOWN -->
-  <div class="cart-menu" *ngIf="dropdownOpen && carritoCantidad > 0">
-    <div class="cart-item" *ngFor="let item of cartItems">
-      <img [src]="item.imagen" alt="{{ item.nombre }}" />
-      <div class="item-info">
-        <span>{{ item.nombre }}</span>
-        <span>{{ item.cantidad }} x ${{ item.precio | number }}</span>
-      </div>
-      <button (click)="removerItem(item.id)" class="remove-item-btn">✖</button>
-    </div>
-    <div class="cart-footer">
-      <span>Total: ${{ totalCarrito | number }}</span>
-      <button routerLink="/shop/carrito" class="view-cart-btn">Ver carrito</button>
-    </div>
-  </div>
-</div>
+          <!-- MENU DROPDOWN -->
+          <div class="cart-menu" *ngIf="dropdownOpen && carritoCantidad > 0">
 
-  <!-- SALIR -->
-  <button (click)="logout()">Salir</button>
-</ng-container>
+            <div *ngFor="let item of cartItems" class="cart-preview-item">
+              <img [src]="item.producto.imagen | safeImage"
+                (error)="onImgError($event)"
+                alt="{{ item.producto.nombre }}">
 
+              <div class="preview-info">
+                <span>{{ item.producto.nombre }}</span>
+                <span>{{ item.cantidad }} x ${{ item.producto.precio | number }}</span>
+                <button (click)="removerItem(item.producto.idProducto)">✕</button>
+              </div>
+            </div>
+
+            <div class="cart-footer">
+              <span>Total: ${{ totalCarrito | number }}</span>
+              <button routerLink="/shop/carrito" class="view-cart-btn">Ver carrito</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SALIR -->
+        <button (click)="logout()">Salir</button>
+      </ng-container>
 
       <!-- 👑 ADMIN -->
       <ng-container *ngIf="auth.getRol() === 'ADMIN'">
