@@ -1,12 +1,14 @@
 package com.tienda.carrito.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 
 
 @Entity
 @Table(name = "PRODUCTOS")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Producto {
 
     @Version

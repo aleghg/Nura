@@ -47,7 +47,6 @@ public class Usuario {
     @Column(name = "PASSWORD", nullable = false, length = 200)
     private String password;
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "ROL", length = 20)
     private Rol rol;
@@ -56,7 +55,14 @@ public class Usuario {
     @Column(name = "FECHA_REGISTRO")
     private Date fechaRegistro; // lo deja null para que Oracle ponga SYSDATE
 
-    // Getters y Setters
+    @Column(name = "CEDULA", length = 20)
+    private String cedula;
+
+    @Column(name = "TELEFONO", length = 20)
+    private String telefono;
+
+
+    // GETTERS Y SETTERS
     public Long getIdUsuario() {
         return idUsuario;
     }
@@ -91,11 +97,11 @@ public class Usuario {
 
     public Rol getRol() {
         return rol;
-    }  // Correcto, devuelve un Rol
+    }
 
     public void setRol(Rol rol) {
         this.rol = rol;
-    }  // Correcto, acepta un Rol
+    }
 
     public Date getFechaRegistro() {
         return fechaRegistro;
@@ -105,14 +111,32 @@ public class Usuario {
         this.fechaRegistro = fechaRegistro;
     }
 
+    public Carrito getCarrito() {
+        return carrito;
+    }
+
     public void setCarrito(Carrito carrito) {
         this.carrito = carrito;
     }
 
-    // Getter adicional para compatibilidad con controller/servicio
+    // 🔹 Compatibilidad
     public Long getId() {
         return this.idUsuario;
     }
 
+    public String getCedula() {
+        return cedula;
+    }
 
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
 }

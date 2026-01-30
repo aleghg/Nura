@@ -104,6 +104,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/carrito/mio").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.DELETE, "/carrito/eliminar/**").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.DELETE, "/carrito/vaciar").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.POST, "/payments/create").hasRole("CLIENTE")
+
 
                         // 🛒 CARRITO GENERAL
                         .requestMatchers("/carrito/**").hasAnyRole("CLIENTE", "ADMIN")
@@ -130,6 +132,8 @@ public class SecurityConfig {
                         // 🔐 RESTO
                         // =============================
                         .anyRequest().authenticated()
+
+
                 )
 
                 .exceptionHandling(ex -> ex

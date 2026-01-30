@@ -26,28 +26,25 @@ public class CarritoController {
 
     // ➕ AGREGAR PRODUCTO
     @PostMapping("/agregar")
-    @PreAuthorize("hasRole('CLIENTE')")
+    // 🔒 Seguridad ya aplicada en SecurityConfig — no duplicamos
     public Carrito agregar(@RequestBody AgregarProductoDTO dto) {
         return service.agregarProducto(dto);
     }
 
     // 👀 VER MI CARRITO (DETALLES)
     @GetMapping("/mio")
-    @PreAuthorize("hasRole('CLIENTE')")
     public List<?> verMiCarrito() {
         return service.verMiCarrito();
     }
 
     // ➖ ELIMINAR PRODUCTO DEL CARRITO
     @DeleteMapping("/eliminar/{idProducto}")
-    @PreAuthorize("hasRole('CLIENTE')")
     public void eliminarProducto(@PathVariable Long idProducto) {
         service.eliminarProducto(idProducto);
     }
 
     // 🧹 VACIAR CARRITO
     @DeleteMapping("/vaciar")
-    @PreAuthorize("hasRole('CLIENTE')")
     public void vaciarCarrito() {
         service.vaciarCarrito();
     }
@@ -83,3 +80,4 @@ public class CarritoController {
         service.eliminar(id);
     }
 }
+

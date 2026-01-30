@@ -2,6 +2,7 @@ package com.tienda.carrito.controller;
 
 import com.tienda.carrito.dto.ActualizarPerfilDTO;
 import com.tienda.carrito.dto.UsuarioDTO;
+import com.tienda.carrito.exeption.UsuarioNoAutenticadoException;
 import com.tienda.carrito.model.Usuario;
 import com.tienda.carrito.service.UsuarioService;
 import com.tienda.carrito.repository.UsuarioRepository;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +35,19 @@ public class UsuarioController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ===============================
+    // ✅ TU ENDPOINT ORIGINAL (NO BORRADO)
+
+    @GetMapping("/me/simple")
+    @PreAuthorize("hasAnyRole('CLIENTE','ADMIN')")
+    public Usuario yo() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsuarioNoAutenticadoException("Usuario no encontrado"));
+    }
+
+    // ===============================
     // 🔹 Endpoint para que el usuario logueado vea su perfil
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('CLIENTE','ADMIN')")
@@ -45,7 +60,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    // 🔹 Endpoint para actualizar el perfil del cliente logueado
+    // ===============================
     // 🔹 ACTUALIZAR PERFIL PROPIO
     @PutMapping("/me")
     @PreAuthorize("hasAnyRole('CLIENTE','ADMIN')")
@@ -79,6 +94,7 @@ public class UsuarioController {
         return ResponseEntity.ok(actualizado);
     }
 
+    // ===============================
     // ✅ Crear usuario (solo ADMIN)
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")

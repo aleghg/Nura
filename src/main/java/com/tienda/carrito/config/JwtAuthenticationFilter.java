@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.slf4j.Logger;
@@ -90,10 +91,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     authorities
                             );
 
+                    // ✅ AGREGADO (no rompe nada)
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     // 🔹 DEBUG FINAL: ver que Spring ya reconoce la auth
                     logger.info("✅ AUTH FINAL: {}", SecurityContextHolder.getContext().getAuthentication());
+                    logger.info("✅ AUTHORITIES: {}", authToken.getAuthorities());
                 }
             }
 

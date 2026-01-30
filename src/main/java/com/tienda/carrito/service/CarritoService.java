@@ -47,7 +47,8 @@ public class CarritoService {
     private Usuario obtenerUsuarioAutenticado() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth == null || !auth.isAuthenticated()) {
+        // 🔧 Mejora: evitar AnonymousAuthenticationToken
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
             throw new UsuarioNoAutenticadoException("Usuario no autenticado");
         }
 
@@ -86,6 +87,7 @@ public class CarritoService {
                     Carrito nuevo = new Carrito();
                     nuevo.setUsuario(usuario);
                     nuevo.setEstado(EstadoCarrito.ACTIVO);
+                    nuevo.setTotal(BigDecimal.ZERO); // 🔧 mejora defensiva
                     return carritoRepository.save(nuevo);
                 });
 
@@ -103,7 +105,8 @@ public class CarritoService {
 
         Carrito carrito = obtenerOCrearCarritoActivo();
 
-        Producto producto = productoRepository.findById(dto.getProductoId())
+        Producto producto = productoRepository
+                .findById(dto.getProductoId())
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
         if (producto.getStock() < dto.getCantidad()) {
@@ -118,9 +121,7 @@ public class CarritoService {
                 .orElse(null);
 
         if (detalle != null) {
-
             detalle.setCantidad(detalle.getCantidad() + dto.getCantidad());
-
         } else {
 
             detalle = new CarritoDetalle();
