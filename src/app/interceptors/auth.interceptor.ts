@@ -18,6 +18,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = this.auth.getToken();
 
     if (!token) {
+      console.warn('⚠️ Request sin token:', req.url);
       return next.handle(req);
     }
 
@@ -27,6 +28,8 @@ export class AuthInterceptor implements HttpInterceptor {
         Authorization: `Bearer ${token}`
       }
     });
+
+    console.log('🔐 Token agregado a:', req.url);
 
     return next.handle(authReq);
   }

@@ -58,6 +58,7 @@ export class LoginComponent implements OnInit {
 
   // 🔐 LOGIN
   login(): void {
+    
     this.errores = {};
     this.mensajeGeneral = '';
 

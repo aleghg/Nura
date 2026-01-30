@@ -21,6 +21,13 @@ export class UsuarioService {
   return this.http.get<Usuario>(`${this.API}/me`, { headers });
 }
 
+// ✅ NUEVO — Alias estilo UserService.me()
+  me(): Observable<Usuario> {
+    const token = localStorage.getItem('token')!;
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<Usuario>(`${this.API}/me`, { headers });
+  }
+
 // 🔹 ACTUALIZAR PERFIL usando DTO
   actualizarPerfil(dto: ActualizarPerfilDTO): Observable<Usuario> {
     const token = localStorage.getItem('token')!;

@@ -1,58 +1,99 @@
-<section class="max-w-6xl mx-auto px-10 py-24">
+<app-shop-header></app-shop-header>
 
-  <!-- TÍTULO -->
-  <h1 class="text-4xl font-serif mb-20 text-center">
-    Checkout
-  </h1>
+<section class="max-w-6xl mx-auto px-10 py-24">
+  <h1 class="text-4xl font-serif mb-20 text-center">Checkout</h1>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-24">
 
     <!-- INFORMACIÓN CLIENTE -->
     <div>
-      <h2 class="tracking-widest mb-10">
-        INFORMACIÓN
-      </h2>
+      <h2 class="tracking-widest mb-10">INFORMACIÓN DEL CLIENTE</h2>
 
-      <input placeholder="Nombre completo" />
-      <input placeholder="Email" />
-      <input placeholder="Dirección" />
-      <input placeholder="Ciudad" />
+      <p class="mb-6 text-sm">Cliente: <strong>{{ usuario?.nombre }}</strong></p>
+
+      <input [(ngModel)]="cedula" placeholder="Cédula / Documento" class="w-full mb-4" />
+      <input [(ngModel)]="telefono" placeholder="Teléfono de contacto" class="w-full mb-4" />
+
+      <h2 class="tracking-widest mt-12 mb-6">ENVÍO</h2>
+
+      <input [(ngModel)]="direccionEnvio" placeholder="Dirección completa" class="w-full mb-4" />
+
+      <h2 class="tracking-widest mt-12 mb-6">PAGO</h2>
+
+      <select [(ngModel)]="metodoPago" class="w-full mb-4 p-2 border">
+        <option value="tarjeta">Tarjeta de crédito/débito</option>
+        <option value="efectivo">Pago en efectivo</option>
+        <option value="transferencia">Transferencia bancaria</option>
+      </select>
+
+      <h2 class="tracking-widest mt-12 mb-6">DESCUENTO</h2>
+
+      <div class="flex gap-2">
+        <input [(ngModel)]="codigoDescuento" placeholder="Código descuento" class="flex-1" />
+        <button (click)="aplicarDescuento()">Aplicar</button>
+      </div>
+
+      <p *ngIf="descuento > 0" class="text-green-600 mt-2">
+        ✔ Descuento aplicado: {{ descuento * 100 }}%
+      </p>
     </div>
 
     <!-- RESUMEN -->
     <div>
-      <h2 class="tracking-widest mb-10">
-        RESUMEN
-      </h2>
+      <h2 class="tracking-widest mb-10">RESUMEN DEL PEDIDO</h2>
 
-      <!-- PRODUCTOS -->
-      <div
-        *ngFor="let item of items$ | async"
-        class="border-b py-6 flex justify-between"
-      >
-        <span class="font-serif">
-          {{ item.nombre }}
-        </span>
-        <span>
-          ${{ item.precio | number }}
-        </span>
+      <div *ngFor="let item of items$ | async" class="border-b py-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <img
+            [src]="item.producto.imagen | safeImage"
+            (error)="onImgError($event)"
+            alt="{{ item.producto.nombre }}"
+            class="w-16 h-16 object-cover rounded"
+          />
+          <div>
+            <p class="font-serif">{{ item.producto.nombre }}</p>
+            <p class="text-sm text-gray-600">Cantidad: {{ item.cantidad }}</p>
+          </div>
+        </div>
+        <span>${{ (item.producto.precio * item.cantidad) | number }}</span>
       </div>
 
-      <!-- TOTAL -->
-      <div class="py-10 flex justify-between font-bold">
+      <div class="py-4 flex justify-between text-sm">
+        <span>Subtotal</span>
+        <span>{{ total$ | async | number:'1.0-0' }}</span>
+      </div>
+
+      <div class="py-2 flex justify-between text-sm">
+        <span>Envío</span>
+        <span>{{ envio | number:'1.0-0' }}</span>
+      </div>
+
+      <div *ngIf="descuento > 0" class="py-2 flex justify-between text-sm text-green-600">
+        <span>Descuento</span>
+        <span>-{{ (total$ | async)! * descuento | number:'1.0-0' }}</span>
+      </div>
+
+      <div class="py-6 flex justify-between font-bold text-xl">
         <span>TOTAL</span>
         <span>
-          ${{ total$ | async | number }}
+          {{
+            ((total$ | async)! + envio - ((total$ | async)! * descuento))
+              | number:'1.0-0'
+          }}
         </span>
       </div>
 
-      <!-- BOTÓN -->
       <button
         (click)="pagar()"
-        class="w-full"
+        [disabled]="!(items$ | async)?.length || !direccionEnvio.trim()"
+        class="w-full py-4 tracking-widest"
       >
         PAGAR
       </button>
+
+      <!-- ESTADOS -->
+      <p *ngIf="estadoPago === 'procesando'" class="mt-4 text-blue-600">Procesando pago...</p>
+      <p *ngIf="estadoPago === 'fallido'" class="mt-4 text-red-600">❌ Error al procesar el pago</p>
     </div>
 
   </div>

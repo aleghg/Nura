@@ -15,7 +15,7 @@
 .shop-editorial-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/products/nura.png');
+  background-image: url('/editorial/nura.png');
   background-size: cover;
   background-position: center;
   opacity: 0.15;

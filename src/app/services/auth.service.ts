@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { tap, Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../environments/environment';
 import { LoginRequest, LoginResponse } from '../models/login.model';
+import { Router } from '@angular/router';
 
 
 @Injectable({ providedIn: 'root' })
@@ -13,11 +14,12 @@ export class AuthService {
   private usuarioSubject = new BehaviorSubject<{ email: string; rol: string } | null>(null);
   usuario$ = this.usuarioSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private router: Router) {
     const email = localStorage.getItem('email');
     const rol = localStorage.getItem('rol');
     if (email && rol) {
       this.usuarioSubject.next({ email, rol });
+      
     }
   }
 
@@ -35,6 +37,7 @@ export class AuthService {
   logout(): void {
     localStorage.clear();
     this.usuarioSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {

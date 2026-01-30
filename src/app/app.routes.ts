@@ -7,7 +7,7 @@ import { categoriasResolver } from './resolvers/categoria.resolver';
 import { productosResolver } from './resolvers/productos.resolver';
 import { productosCategoriaResolver } from './resolvers/productos-categoria.resolver';
 import { productDetailResolver } from './resolvers/product-detail.resolver';
-
+import { CheckoutResolver } from './resolvers/checkout.resolver';
 export const routes: Routes = [
 
   /* =============================
@@ -86,16 +86,6 @@ export const routes: Routes = [
             .then(m => m.CartComponent)
       },
 
-
-      // 💳 CHECKOUT (PRIVADO)
-      {
-        path: 'checkout',
-        canActivate: [authGuard],
-        loadComponent: () =>
-          import('./components/checkout/checkout')
-            .then(m => m.CheckoutComponent)
-      },
-
       // 👤 USUARIOS (SOLO ADMIN)
       {
         path: 'usuarios',
@@ -146,7 +136,7 @@ export const routes: Routes = [
         resolve: {
           producto: productDetailResolver
         }
-      }
+      },
     ]
   },
 
@@ -164,12 +154,27 @@ export const routes: Routes = [
         .then(m => m.CartComponent)
   },
 
+  {
+    path: 'shop/checkout',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./components/checkout/checkout')
+        .then(m => m.CheckoutComponent)
+  },
+
   // 💻 PERFIL DEL USUARIO (PRIVADO)
   {
     path: 'perfil',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./components/perfil/perfil').then(m => m.PerfilComponent)
+  },
+
+  {
+    path: 'checkout',
+    loadComponent: () => import('./components/checkout/checkout')
+      .then(m => m.CheckoutComponent),
+    resolve: { data: CheckoutResolver }
   },
 
   /* =============================

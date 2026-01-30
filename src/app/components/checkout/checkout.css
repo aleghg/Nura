@@ -1,30 +1,27 @@
-/* CONTENEDOR GENERAL */
 section {
   min-height: 100vh;
   background-color: #ffffff;
   color: #111111;
 }
 
-/* TÍTULO PRINCIPAL */
 h1 {
   letter-spacing: 0.15em;
 }
 
-/* SUBTÍTULOS */
 h2 {
   font-size: 0.75rem;
   letter-spacing: 0.25em;
   color: #555;
 }
 
-/* INPUTS */
-input {
+input, select {
   background: transparent;
   border: none;
   border-bottom: 1px solid #ccc;
   padding: 0.75rem 0;
   font-size: 0.9rem;
   outline: none;
+  width: 100%;
   transition: border-color 0.3s ease;
 }
 
@@ -33,22 +30,14 @@ input::placeholder {
   letter-spacing: 0.1em;
 }
 
-input:focus {
+input:focus, select:focus {
   border-bottom-color: #000;
 }
 
-/* RESUMEN */
-div > .border-b {
+.border-b {
   border-color: #e5e5e5;
 }
 
-/* TOTAL */
-.font-bold {
-  font-size: 1.1rem;
-  letter-spacing: 0.15em;
-}
-
-/* BOTÓN PAGAR */
 button {
   background: transparent;
   border: 1px solid #000;
@@ -59,12 +48,16 @@ button {
   transition: all 0.3s ease;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background: #000;
   color: #fff;
 }
 
-/* RESPONSIVE */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   section .grid {
     grid-template-columns: 1fr;

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
+import { AuthService } from '../services/auth.service';
 
 export interface Producto {
   idProducto: number;
@@ -30,33 +31,42 @@ export class CartService {
   private API_AGREGAR = `${environment.apiUrl}/carrito/agregar`;
   private API_ELIMINAR = `${environment.apiUrl}/carrito/eliminar`;
   private API_VACIAR = `${environment.apiUrl}/carrito/vaciar`;
-  private cargado = false;
+  //private cargado = false;
 
-  constructor(private http: HttpClient) {
-    this.cargarCarrito();
-  }
-
-  /** 🔄 Cargar carrito */
-  cargarCarrito(): void {
-
-    if (this.cargado) return;
-    this.cargado = true;
-
-    this.http.get<CarritoDetalle[]>(this.API_CLIENTE).subscribe({
-      next: items => {
-        console.log('🛒 Carrito backend:', items);
-        this.carritoSubject.next(items);
-      },
-      error: err => {
-        console.error('Error cargando carrito', err);
-        this.cargado = false;
+  constructor(private http: HttpClient, private authService: AuthService) {
+    // 🔥 Cuando cambia el usuario → recargo carrito
+    this.authService.usuario$.subscribe(usuario => {
+      if (usuario) {
+        this.cargarCarrito().subscribe();
+      } else {
+        this.carritoSubject.next([]);
       }
     });
   }
 
+  /** 🔄 Cargar carrito */
+  cargarCarrito(): Observable<CarritoDetalle[]> {
+
+    //if (this.cargado) return of([]);
+    //this.cargado = true;
+
+    return this.http.get<CarritoDetalle[]>(this.API_CLIENTE).pipe(
+      tap({
+        next: items => {
+          console.log('🛒 Carrito backend:', items);
+          this.carritoSubject.next(items);
+        },
+        error: err => {
+          console.error('Error cargando carrito', err);
+          //this.cargado = false;
+        }
+      })
+    );
+  }
+
   refresh(): void {
-    this.cargado = false;
-    this.cargarCarrito();
+    //this.cargado = false;
+    this.cargarCarrito().subscribe();
   }
 
   /** ➕ Agregar producto */
@@ -68,17 +78,14 @@ export class CartService {
   }
 
   /** ❌ Eliminar producto */
-  removerProducto(idProducto: number): void {
-    this.http.delete(`${this.API_ELIMINAR}/${idProducto}`)
-      .subscribe(() => this.refresh());
+  removerProducto(idProducto: number): Observable<any> {
+    return this.http.delete(`${this.API_ELIMINAR}/${idProducto}`)
+      .pipe(tap(() => this.refresh()));
   }
 
   /** 🧹 Vaciar carrito */
-  limpiarCarrito(): void {
-    this.http.delete(this.API_VACIAR)
-      .subscribe(
-        () => this.carritoSubject.next([]),
-        err => console.error('Error limpiando carrito', err)
-      );
+  limpiarCarrito(): Observable<any> {
+    return this.http.delete(this.API_VACIAR)
+      .pipe(tap(() => this.carritoSubject.next([])));
   }
 }
